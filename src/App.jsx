@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import AppRouter from './components/AppRouter';
-import AuthContext from './contexts/AuthContext';
+
 
 // import { db } from './fbConfig';
 // import {
@@ -138,13 +138,12 @@ import AuthContext from './contexts/AuthContext';
 
 function App () {
 
-  
  
 
 return (
-  <AuthContext>
+  
     <AppRouter/>
-  </AuthContext>
+  
   );
 }
 

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import {useEffect, useState} from 'react';
 import { initializeApp } from "firebase/app";
 import {getFirestore} from "@firebase/firestore";
 import { getAuth, createUserWithEmailAndPassword, onAuthStateChanged, signOut, signInWithEmailAndPassword } from 'firebase/auth';
@@ -37,10 +37,14 @@ export function useAuth() {
   const [currentUser, setCurrentUser] = useState();
 
   useEffect(() => {
-   const unsubscribe = onAuthStateChanged(auth, user => setCurrentUser(user) );
+   const unsubscribe = onAuthStateChanged(auth, user => setCurrentUser(user));
    return unsubscribe;
   }, [])
 
   return currentUser;
 }
+
+
+
+
 
