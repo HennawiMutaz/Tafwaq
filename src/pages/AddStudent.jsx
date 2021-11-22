@@ -2,6 +2,21 @@ import React, { useRef } from 'react'
 import { useNavigate } from 'react-router';
 import Header from '../components/Header';
 import SideBar from '../components/SideBar';
+import { signup } from '../fbConfig';
+import {
+  collection,
+  addDoc,
+  updateDoc,
+  doc,
+  deleteDoc,
+  onSnapshot,
+  serverTimestamp,
+  query,
+  orderBy,
+} from 'firebase/firestore';
+import { db } from '../fbConfig';
+
+
 
 function AddStudent() {
 
@@ -12,11 +27,69 @@ function AddStudent() {
     const birthdate = useRef();
     const level = useRef();
     const gender = useRef();
+    const firstNameEn = useRef();
+    const midNameEn = useRef();
+    const lastNameEn = useRef();
 
 
     function handleAddStudent(e) {
         e.preventDefault();
-        // window.location.href = "";
+        console.log(firstName.current.value);
+        console.log(midName.current.value);
+        console.log(lastName.current.value);
+        console.log(firstNameEn.current.value);
+        console.log(midNameEn.current.value);
+        console.log(lastNameEn.current.value);
+        console.log(birthdate.current.value);
+        console.log(level.current.value);
+        console.log(gender.current.value); 
+        
+        // 
+
+        const email = firstNameEn.current.value.slice(0,2) + midNameEn.current.value.slice(0,2) + lastNameEn.current.value + birthdate.current.value.slice(0,4) + "@tafwaq.edu.jo";
+        console.log(email);
+
+        let chars = "0123456789abcdefghijklmnopqrstuvwxyz!@#$%^&*()ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        let passwordLength = 12;
+        let password = "";
+
+        for (let i = 0; i <= passwordLength; i++) {
+            let randomNumber = Math.floor(Math.random() * chars.length);
+            password += chars.substring(randomNumber, randomNumber +1);
+           }
+        
+        console.log(password);
+
+        signup(email, password).then(async (result) => {
+            let user = result.user;
+            
+            if (user) {
+                const userCollectionRef = collection(db, 'users');
+                
+                const newUser = {
+                            uid: user.uid, //auth uid
+                            firstNameAr: firstName.current.value.trim(),
+                            midNameAr: midName.current.value.trim(),
+                            lastNameAr: lastName.current.value.trim(),
+                            //
+                            firstNameEn: firstNameEn.current.value.trim(),
+                            midNameEn: midNameEn.current.value.trim(),
+                            lastNameEn: lastNameEn.current.value.trim(),
+                            //
+                            birthdate: birthdate.current.value,
+                            level: level.current.value,
+                            gender: gender.current.value,
+                            //
+                            type: "student",
+                            createdAt: serverTimestamp(),
+                          };
+                    
+                          // Add to firebase
+                          const docRef = await addDoc(userCollectionRef, newUser);
+                          console.log(docRef.id);
+                          
+            }
+        });
     }
 
 
@@ -28,12 +101,12 @@ function AddStudent() {
             <div className="container-fluid">
                 <div className="row mt-5">
                     {/* title header & add student btn */}
-                    <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-                        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                            <h1 class="h2">إضافة طالب</h1>
-                            <div class="btn-toolbar mb-2 mb-md-0">
+                    <main className="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+                        <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                            <h1 className="h2">إضافة طالب</h1>
+                            <div className="btn-toolbar mb-2 mb-md-0">
                                 <div className="alert d-flex justify-content-end" role="alert">
-                                    <a className="btn btn-primary btn-lg" href="">
+                                    <a className="btn btn-primary btn-lg" href="" onClick={handleAddStudent}>
                                         حفظ
                                     </a>
                                 </div>
@@ -42,8 +115,8 @@ function AddStudent() {
                     </main>
                     {/* end of title header */}
                     {/* form*/}
-                    <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-                        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                    <main className="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+                        <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
                             <section className="get-in-touch">
                                 <form className="contact-form row">
                                     <div className="row">
@@ -64,16 +137,16 @@ function AddStudent() {
                                     {/* ENGLISH NAME */}
                                     <div className="row mt-5">
                                         <div className="form-field col-lg-3">
-                                            <label className="label" htmlFor="">الاسم الاول بالانجليزي</label> <br />
-                                            <input autoComplete="off"  id="" className="input-text js-input" type="text" required />
+                                            <label className="label" htmlFor="firstNameEn">الاسم الاول بالانجليزي</label> <br />
+                                            <input ref={firstNameEn} autoComplete="off"  id="firstNameEn" className="input-text js-input" type="text" required />
                                         </div>
                                         <div className="form-field col-lg-3 ">
-                                            <label className="label" htmlFor=""> اسم الأب بالانجليزي </label> <br />
-                                            <input autoComplete="off"  id="" className="input-text js-input" type="text" required />
+                                            <label className="label" htmlFor="midNameEn"> اسم الأب بالانجليزي </label> <br />
+                                            <input ref={midNameEn} autoComplete="off"  id="midNameEn" className="input-text js-input" type="text" required />
                                         </div>
                                         <div className="form-field col-lg-3 ">
-                                            <label className="label" htmlFor=""> اسم العائلة بالانجليزي </label> <br />
-                                            <input autoComplete="off"  id="" className="input-text js-input" type="text" required />
+                                            <label className="label" htmlFor="lastNameEn"> اسم العائلة بالانجليزي </label> <br />
+                                            <input ref={lastNameEn} autoComplete="off"  id="lastNameEn" className="input-text js-input" type="text" required />
                                         </div>
                                     </div>
                                     {/* END OF ENGLISH NAME */}
@@ -85,28 +158,28 @@ function AddStudent() {
                                     </div>
                                         <div className=" col-lg-3">
                                             <label className="label">الصف</label>
-                                            <select dir="rtl" className="form-control form-select" required>
-                                                <option disabled selected value> </option>
-                                                <option>الأول</option>
-                                                <option>الثاني</option>
-                                                <option>الثالث</option>
-                                                <option>الرابع</option>
-                                                <option>الخامس</option>
-                                                <option>السادس</option>
-                                                <option>السابع</option>
-                                                <option>الثامن</option>
-                                                <option>التاسع</option>
-                                                <option>العاشر</option>
-                                                <option>الحادي عشر</option>
-                                                <option>الثاني عشر</option>
+                                            <select ref={level} dir="rtl" className="form-control form-select" required>
+                                                <option disabled value> </option>
+                                                <option value="1">الأول</option>
+                                                <option value="2">الثاني</option>
+                                                <option value="3">الثالث</option>
+                                                <option value="4">الرابع</option>
+                                                <option value="5">الخامس</option>
+                                                <option value="6">السادس</option>
+                                                <option value="7">السابع</option>
+                                                <option value="8">الثامن</option>
+                                                <option value="9">التاسع</option>
+                                                <option value="10">العاشر</option>
+                                                <option value="11">الحادي عشر</option>
+                                                <option value="12">الثاني عشر</option>
                                             </select>
                                         </div>
                                         <div className=" col-lg-3">
                                             <label className="label">الجنس</label>
-                                            <select dir="rtl" className="form-control form-select" required>
-                                                <option disabled selected value> </option>
-                                                <option>ذكر</option>
-                                                <option>أنثى</option>
+                                            <select ref={gender} dir="rtl" className="form-control form-select" required>
+                                                <option disabled value> </option>
+                                                <option value="male">ذكر</option>
+                                                <option value="female">أنثى</option>
                                             </select>
                                         </div>
                                     </div>

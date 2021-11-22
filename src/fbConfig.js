@@ -3,6 +3,7 @@ import { initializeApp } from "firebase/app";
 import {getFirestore} from "@firebase/firestore";
 import { getAuth, createUserWithEmailAndPassword, onAuthStateChanged, signOut, signInWithEmailAndPassword } from 'firebase/auth';
 
+
 const firebaseConfig = {
   apiKey: "AIzaSyAZU9mr36OLEC5rM-5WcWcGKueAFu5fTb4",
   authDomain: "tfwaq-36acd.firebaseapp.com",
@@ -43,8 +44,5 @@ export function useAuth() {
 
   return currentUser;
 }
-
-
-
 
 
