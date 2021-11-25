@@ -7,7 +7,8 @@ import { useAuth } from '../fbConfig'
 import StudentList from '../pages/StudentList'
 import NotFoundPage from '../pages/NotFoundPage'
 import AddStudent from '../pages/AddStudent'
-
+import TeacherList from '../pages/TeacherList'
+import AddTeacher from '../pages/AddTeacher'
 
 
 
@@ -25,6 +26,8 @@ function AppRouter() {
                     <Route exact path='/account' element={ !auth ? <Navigate to="/login" replace={true} /> : <Account /> } />
                     <Route exact path='/account/studentlist' element={ <StudentList /> } />
                     <Route exact path='/account/addstudent' element={ <AddStudent /> } />
+                    <Route exact path='/account/teacherlist' element={ <TeacherList /> } />
+                    <Route exact path='/account/addteacher' element={ <AddTeacher /> } />
                     <Route  path="*" element={ <NotFoundPage/> } />
                 </Routes>
             </BrowserRouter> 

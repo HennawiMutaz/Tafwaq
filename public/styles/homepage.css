@@ -1,0 +1,442 @@
+a {
+    text-decoration: none;
+    color: #000;
+}
+
+.homepage {
+    overflow-y: hidden;
+}
+
+main {
+	min-height: 100vh;
+  }
+  
+  .header {
+	background: white;
+	box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  h1 {
+	font: normal 4em "Tajawal", serif;
+	text-align: center;
+  }
+  
+  nav {
+	max-width: 800px;
+	margin: auto;
+	display: flex;
+	flex-wrap: wrap;
+  }
+  
+  nav a {
+	flex-grow: 1;
+	text-align: center;
+	padding: 1em;
+	position: relative;
+  }
+  
+  nav a::after {
+	content: "";
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	height: 2px;
+	transform: scaleX(0);
+	background: #333;
+	transition: 0.7s transform cubic-bezier(0.06, 0.9, 0.28, 1);
+  }
+  
+  nav a:hover::after {
+	transform: scaleX(1);
+  }
+nav a:hover{
+color:#1EAE98;
+}
+
+.header-content{
+	margin-top: 40px;
+}
+.text-container{
+	margin-top: 150px;
+	margin-right: 80px;
+	width: 80%;
+	text-align: center;
+}
+
+.text-container h1 {
+    color: #393939;
+    font: 700 2.5rem/3.5rem "Tajawal", sans-serif;
+}
+.header .p-large {
+    margin-bottom: 1.875rem;
+}
+.p-large {
+	color: #626262;
+    font: 400 1.25rem/1.5rem "Tajawal", sans-serif;
+}
+.btn-solid-lg {
+    display: inline-block;
+    padding: 1.375rem 2.625rem 1.375rem 2.625rem;
+    border: 0.125rem solid #1EAE98;
+    border-radius: 2rem;
+    background-color: #1EAE98;
+    color: #fff;
+    font: 700 0.75rem/0 "Tajawal", sans-serif;
+    text-decoration: none;
+    transition: all 0.2s;
+}
+.btn-solid-lg:hover {
+    background-color: transparent;
+    color: #1EAE98;
+    text-decoration: none;
+}
+
+/* Video */
+.basic-3 {
+	padding-top: 6.875rem;
+	padding-bottom: 6.125rem;
+}
+
+.basic-3 h2 {
+	margin-bottom: 3rem;
+	text-align: center;
+}
+
+.basic-3 .image-container {
+	margin-bottom: 2.25rem;
+}
+
+.basic-3 .image-container img {
+	border-radius: 0.5rem;
+}
+
+.basic-3 .video-wrapper {
+	position: relative;
+}
+
+/* Video Play Button */
+.basic-3 .video-play-button {
+	position: absolute;
+	z-index: 10;
+	top: 50%;
+	left: 50%;
+	display: block;
+	box-sizing: content-box;
+	width: 2rem;
+	height: 2.75rem;
+	padding: 1.125rem 1.25rem 1.125rem 1.75rem;
+	border-radius: 50%;
+	-webkit-transform: translateX(-50%) translateY(-50%);
+	-ms-transform: translateX(-50%) translateY(-50%);
+	transform: translateX(-50%) translateY(-50%);
+}
+
+.basic-3 .video-play-button:before {
+	content: "";
+	position: absolute;
+	z-index: 0;
+	top: 50%;
+	left: 50%;
+	display: block;
+	width: 4.75rem;
+	height: 4.75rem;
+	border-radius: 50%;
+	background: #1EAE98;
+	animation: pulse-border 1500ms ease-out infinite;
+	-webkit-transform: translateX(-50%) translateY(-50%);
+	-ms-transform: translateX(-50%) translateY(-50%);
+	transform: translateX(-50%) translateY(-50%);
+}
+
+.basic-3 .video-play-button:after {
+	content: "";
+	position: absolute;
+	z-index: 1;
+	top: 50%;
+	left: 50%;
+	display: block;
+	width: 4.375rem;
+	height: 4.375rem;
+	border-radius: 50%;
+	background: #1EAE98;
+	transition: all 200ms;
+	-webkit-transform: translateX(-50%) translateY(-50%);
+	-ms-transform: translateX(-50%) translateY(-50%);
+	transform: translateX(-50%) translateY(-50%);
+}
+
+.basic-3 .video-play-button span {
+	position: relative;
+	display: block;
+	z-index: 3;
+	top: 0.375rem;
+	left: -0.25rem;
+	width: 0;
+	height: 0;
+	border-left: 1.625rem solid #fff;
+	border-top: 1rem solid transparent;
+	border-bottom: 1rem solid transparent;
+}
+
+@keyframes pulse-border {
+	0% {
+		transform: translateX(-50%) translateY(-50%) translateZ(0) scale(1);
+		opacity: 1;
+	}
+	100% {
+		transform: translateX(-50%) translateY(-50%) translateZ(0) scale(1.5);
+		opacity: 0;
+	}
+}
+/* end of video play button */
+
+.basic-3 p {
+	text-align: center;
+}
+.cards-1 .card {
+	display: inline-block;
+	max-width: 17.125rem;
+	vertical-align: top;
+	min-height: 261.800px;
+}
+.cards-1 {
+	padding-top: 4rem;
+	padding-bottom: 1.625rem;
+	text-align: center;
+}
+
+.cards-1 h2 {
+	margin-bottom: 1rem;
+}
+
+.cards-1 .card {
+	max-width: 21rem;
+	margin-right: auto;
+	margin-bottom: 4.5rem;
+	margin-left: auto;
+	padding: 3.25rem 2rem 2rem 2rem;
+	border: 1px solid #c4d8dc;
+	border-radius: 0.5rem;
+	background: transparent;
+}
+
+.cards-1 .card-image {
+	width: 6rem;
+	height: 6rem;
+	margin-right: auto;
+	margin-bottom: 2rem;
+	margin-left: auto;
+}
+
+.cards-1 .card-title {
+	margin-bottom: 0.875rem;
+}
+
+.cards-1 .card-body {
+	padding: 0;
+}
+.card{
+margin: 20px !important;}
+@media screen and (max-width: 1000px) {
+	#header-img {
+	  visibility: hidden;
+	  clear: both;
+	  float: left;
+	  margin: 10px auto 5px 20px;
+	  width: 28%;
+	  display: none;
+	}
+	#testimonial-img{
+		visibility: hidden;
+		clear: both;
+		float: left;
+		margin: 10px auto 5px 20px;
+		width: 28%;
+		display: none;
+	}
+  }
+  #testimonial{
+	  background-image: url(../images/testimonials-background.png);
+	  height: 600px;
+  }
+
+  #testimonial h2 {
+    color: #393939;
+    font: 700 2.25rem/2.75rem "Tajawal", sans-serif;
+	margin-top: 40px;
+	margin-bottom:80px;
+}
+.card-body .card-image {
+	width: 7rem;
+	height: 7rem;
+	margin-right: auto;
+	margin-bottom: 0.25rem;
+	margin-left: auto;
+	border-radius: 50%;
+}
+.card-body {
+	padding: 2.5rem 2.75rem 1.875rem 2.5rem;
+}
+.testimonial-text {
+	font: italic 400 1rem/1.5rem "Tajawal", sans-serif;
+}
+
+.testimonial-author {
+	font: 700 1rem/1.5rem "Tajawal", sans-serif;
+}
+.image-container{
+	margin-top: 160px;
+}
+
+
+.basic-4 {
+	padding-top: 7rem;
+	padding-bottom: 4rem;
+	text-align: center;
+}
+
+.basic-4 h2 {
+	margin-bottom: 30px !important;
+	text-align: center;
+}
+
+.basic-4 .team-member {
+	max-width: 12.5rem;
+	margin-right: auto;
+	margin-bottom: 3.5rem;
+	margin-left: auto;
+}
+
+/* Hover Animation */
+.basic-4 .image-wrapper {
+	overflow: hidden;
+	margin-bottom: 1.5rem;
+	border-radius: 50%;
+}
+
+.basic-4 .image-wrapper img {
+	margin: 0;
+	transition: all 0.3s;
+}
+
+.basic-4 .image-wrapper:hover img {
+	-moz-transform: scale(1.15);
+	-webkit-transform: scale(1.15);
+	transform: scale(1.15);
+}
+/* end of hover animation */
+
+.basic-4 .team-member .p-large {
+	margin-bottom: 0.25rem;
+	font-size: 1.125rem;
+}
+
+.basic-4 .team-member .job-title {
+	margin-bottom: 0.375rem;
+}
+
+.basic-4 .fa-stack {
+	margin-top: 0.375rem;
+	margin-right: 0.125rem;
+	margin-left: 0.125rem;
+	font-size: 0.875rem;
+}
+
+.basic-4 .fa-stack-2x {
+	color: #1EAE98;
+	transition: all 0.2s ease;
+}
+
+.basic-4 .fa-stack-1x {
+	color: #fff;
+	transition: all 0.2s ease;
+}
+
+.basic-4 .fa-stack:hover .fa-stack-2x {
+	color: #00a7bd;
+}
+
+.basic-4 .fa-stack:hover .fa-stack-1x {
+	color: #fff;
+}
+.basic-4 .team-member {
+	display: inline-block;
+	width: 12.5rem;
+	margin-right: 2rem;
+	margin-left: 2rem;
+	vertical-align: top;
+}
+
+#video-header{
+	margin-bottom: 3rem;
+    text-align: center;
+	color: #393939;
+    font: 700 2.25rem/2.75rem "Tajawal", sans-serif;
+}
+
+.footer {
+	padding-top: 4.625rem;
+	padding-bottom: 0.5rem;
+}
+
+.footer .footer-col {
+	margin-bottom: 2.25rem;
+}
+
+.footer h4 {
+	margin-bottom: 1rem;
+}
+
+.footer .list-unstyled .fas {
+	color: #1EAE98;
+	font-size: 0.5rem;
+	line-height: 1.375rem;
+}
+
+.footer .list-unstyled .media-body {
+	margin-left: 0.625rem;
+}
+
+.footer .fa-stack {
+	margin-bottom: 0.75rem;
+	margin-right: 0.5rem;
+	font-size: 1.5rem;
+}
+
+.footer .fa-stack .fa-stack-1x {
+    color: #fff;
+	transition: all 0.2s ease;
+}
+
+.footer .fa-stack .fa-stack-2x {
+	color: #1EAE98;
+	transition: all 0.2s ease;
+}
+
+.footer .fa-stack:hover .fa-stack-1x {
+	color: #fff;
+}
+
+.footer .fa-stack:hover .fa-stack-2x {
+    color: #00a7bd;
+}
+
+.copyright {
+	padding-top: 1rem;
+	padding-bottom: 0.375rem;
+	text-align: center;
+}
+
+.copyright .p-small {
+	padding-top: 1.375rem;
+	border-top: 1px solid #c4d8dc;
+	opacity: 0.7;
+}
+.icons{
+	color: #1EAE98;
+}
+.icons:hover{
+	color: #000;
+}
+

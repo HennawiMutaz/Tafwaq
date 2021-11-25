@@ -20,13 +20,13 @@ import { db } from '../fbConfig';
 
 
 
-function AddStudent() {
+function AddTeacher() {
 
     const lastName = useRef();
     const midName = useRef();
     const firstName = useRef();
     const birthdate = useRef();
-    const level = useRef();
+    const subject = useRef();
     const gender = useRef();
     const firstNameEn = useRef();
     const midNameEn = useRef();
@@ -36,9 +36,18 @@ function AddStudent() {
     const [isLoading, setIsLoading] = useState(false);
 
 
-    function handleAddStudent(e) {
+    function handleAddTeacher(e) {
         e.preventDefault();
         setIsLoading(true);
+        console.log(firstName.current.value);
+        console.log(midName.current.value);
+        console.log(lastName.current.value);
+        console.log(firstNameEn.current.value);
+        console.log(midNameEn.current.value);
+        console.log(lastNameEn.current.value);
+        console.log(birthdate.current.value);
+        console.log(subject.current.value);
+        console.log(gender.current.value); 
         
         // 
 
@@ -60,7 +69,7 @@ function AddStudent() {
             const user = result.user;
             
             if (user) {
-                let newUser = {
+                const newUser = {
                     firstNameAr: firstName.current.value.trim(),
                     midNameAr: midName.current.value.trim(),
                     lastNameAr: lastName.current.value.trim(),
@@ -70,18 +79,17 @@ function AddStudent() {
                     lastNameEn: lastNameEn.current.value.trim(),
                     //
                     birthdate: birthdate.current.value,
-                    level: level.current.value,
+                    subject: subject.current.value,
                     gender: gender.current.value,
                     email: email,
                     //
-                    type: "student",
+                    type: "teacher",
                     createdAt: serverTimestamp(),
                 };
                 await setDoc(doc(db, "users", user.uid), newUser);
 
                 setIsLoading(false);
-                // setModalMessage("تم إضافة الطالب بنجاح") ;
-                //add password to object for printing on screen
+                setModalMessage("تم إضافة المعلم بنجاح") ;
                 newUser["password"] = password;
                 console.log(newUser);
                 setModalMessage(newUser) ;
@@ -92,7 +100,6 @@ function AddStudent() {
             
             //show modal
             document.getElementById("ModalBtn").click();
-            //reset form
             document.getElementById("Reset").click();
         });
         
@@ -110,12 +117,12 @@ function AddStudent() {
                     {/* title header & add student btn */}
                     <main className="col-md-9 ms-sm-auto col-lg-10 px-md-4">
                         <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                            <h1 className="h2">إضافة طالب</h1>
+                            <h1 className="h2">إضافة معلم</h1>
                             <div className="btn-toolbar mb-2 mb-md-0">
                                 <div className="alert d-flex justify-content-end" role="alert">
-                                    <a className="btn btn-primary btn-lg" href="" onClick={handleAddStudent}>
+                                    <a className="btn btn-primary btn-lg" href="" onClick={handleAddTeacher}>
                                     <span className="mx-1"> حفظ </span>
-                                    <div style={{display: isLoading ? null : "none"}} className="spinner-border spinner-border-sm" role="status"></div>
+                                    <div style={{display: isLoading ? null : "none"}} class="spinner-border spinner-border-sm" role="status"></div>
                                     </a>
                                 </div>
                             </div>
@@ -166,21 +173,23 @@ function AddStudent() {
                                         <input ref={birthdate} id="date" className="input-text js-inputtop" type="date" required />
                                     </div>
                                         <div className=" col-lg-3">
-                                            <label className="label">الصف</label>
-                                            <select ref={level} dir="rtl" className="form-control form-select" required>
+                                            <label className="label">المادة</label>
+                                            <select ref={subject} dir="rtl" className="form-control form-select" required>
                                                 <option value selected> </option>
-                                                <option value="1">الأول</option>
-                                                <option value="2">الثاني</option>
-                                                <option value="3">الثالث</option>
-                                                <option value="4">الرابع</option>
-                                                <option value="5">الخامس</option>
-                                                <option value="6">السادس</option>
-                                                <option value="7">السابع</option>
-                                                <option value="8">الثامن</option>
-                                                <option value="9">التاسع</option>
-                                                <option value="10">العاشر</option>
-                                                <option value="11">الحادي عشر</option>
-                                                <option value="12">الثاني عشر</option>
+                                                <option value="علوم" >علوم</option>
+                                                <option value="رياضيات">رياضيات</option>
+                                                <option value="اللغة انجليزية">اللغة انجليزية</option>
+                                                <option value="اللغة العربية">اللغة العربية</option>
+                                                <option value="الكيمياء">الكيمياء</option>
+                                                <option value="الفيزياء">الفيزياء</option>
+                                                <option value="تاريخ">تاريخ</option>
+                                                <option value="جغرافيا">جغرافيا</option>
+                                                <option value="وطنية">وطنية</option>
+                                                <option value="علوم الأرض">علوم الأرض</option>
+                                                <option value="العلوم الحياتية">العلوم الحياتية </option>
+                                                <option value="تاريخ الأردن">تاريخ الأردن</option>
+                                                <option value="علوم الحاسوب">علوم الحاسوب  </option>
+                                                <option value="علوم إسلامية">علوم إسلامية  </option>
                                             </select>
                                         </div>
                                         <div className=" col-lg-3">
@@ -204,4 +213,4 @@ function AddStudent() {
     )
 }
 
-export default AddStudent
+export default AddTeacher

@@ -1,7 +1,7 @@
 import React from 'react'
 import Header from '../components/Header'
 import SideBar from '../components/SideBar'
-function StudentList() {
+function TeacherList() {
 
     return (
         <div>       
@@ -11,14 +11,14 @@ function StudentList() {
 
         <div className="container-fluid">
             <div className="row mt-5">
-                {/* title header & add student btn */}
+                {/* title header & add teacher btn */}
                 <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
                     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                        <h1 class="h2">قائمة الطلاب</h1>
+                        <h1 class="h2">قائمة المعلمين</h1>
                         <div class="btn-toolbar mb-2 mb-md-0">
                             <div className="alert d-flex justify-content-end" role="alert">
-                                <a className="btn btn-primary btn-lg" href="/account/addstudent">
-                                    <span> إضافة طالب </span>
+                                <a className="btn btn-primary btn-lg" href="/account/addteacher">
+                                    <span> إضافة معلم </span>
                                     <i className="fas fa-user-plus" />
                                 </a>
                             </div>
@@ -34,9 +34,9 @@ function StudentList() {
                         <thead>
                             <tr>
                             <th scope="col">#</th>
-                            <th scope="col">اسم الطالب</th>
+                            <th scope="col">اسم المعلم</th>
                             <th scope="col">اسم الاب</th>
-                            <th scope="col">الصف</th>
+                            <th scope="col">التخصص</th>
                             <th scope="col">البريد الإلكتروني</th>
                             </tr>
                         </thead>
@@ -45,21 +45,21 @@ function StudentList() {
                             <th scope="row">1</th>
                             <td>محمد</td>
                             <td>احمد</td>
-                            <td>الخامس</td>
+                            <td>رياضيات</td>
                             <td>test2@tafwaq.edu.jo</td>
                             </tr>
                             <tr>
                             <th scope="row">2</th>
                             <td>خالد</td>
                             <td>محمد</td>
-                            <td>العاشر</td>
+                            <td>علوم</td>
                             <td>test3@tafwaq.edu.jo</td>
                             </tr>
                             <tr>
                             <th scope="row">3</th>
                             <td>رائد</td>
                             <td>كريم</td>
-                            <td>الأول</td>
+                            <td>عربي</td>
                             <td>test4@tafwaq.edu.jo</td>
                             </tr>
                         </tbody>
@@ -76,4 +76,4 @@ function StudentList() {
     )
 }
 
-export default StudentList
+export default TeacherList

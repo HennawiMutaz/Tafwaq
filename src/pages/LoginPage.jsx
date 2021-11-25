@@ -46,7 +46,7 @@ function LoginPage() {
             <div className="container-fluid">
               <div className="row align-items-center">
                 <div id="login_image" className="col-lg-7 col-12 mt-sm-5">
-                  <img src="./img/study.svg" alt="#" className="img-fluid" id="login-img" />
+                  <img src="/images/study.svg" alt="#" className="img-fluid" id="login-img" />
                 </div>
                 <div className="col-lg-5 col-12 bg-white rounded-3 shadow-lg">
                 <section className="form-signin" dir="ltr">

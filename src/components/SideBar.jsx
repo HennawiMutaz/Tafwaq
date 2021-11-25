@@ -18,6 +18,12 @@ function SideBar() {
               قائمة الطلاب
             </a>
           </li>
+          <li className="nav-item">
+            <a className="nav-link" href="/account/teacherlist">
+            <i class="fas fa-chalkboard-teacher"></i>
+              قائمة المعلمين
+            </a>
+          </li>
           
         </ul>
 

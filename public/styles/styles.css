@@ -107,13 +107,6 @@ body {
   margin-left: 5px;
 }
 
-/* Sidebar
-.sidebar {
-  position: absolute;
-  right: 0;
-  top: 0;
-} */
-
 
 .bi {
   vertical-align: -.125em;
@@ -271,7 +264,7 @@ body {
   box-shadow: 0 0 0 3px rgba(255, 255, 255, .25);
 }
 
-/* sidebar */
+/* scrollbar */
 /* width */
 ::-webkit-scrollbar {
   width: 10px;
@@ -290,4 +283,11 @@ body {
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
   background: #555;
+}
+
+/* Printing Summary */
+@media print {
+  .no-print {
+    display: none;
+  }
 }

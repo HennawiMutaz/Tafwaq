@@ -51,7 +51,7 @@ function Account() {
         <h1 className="h2">الرئيسية</h1>
         <div className="btn-toolbar mb-2 mb-md-0">
         <div className="alert d-flex justify-content-end" role="alert">
-    <h4 className="alert-heading fw-bolder"> مرحباً {info?.firstName} </h4>
+    <h4 className="alert-heading fw-bolder"> مرحباً {info?.firstNameAr} </h4>
     </div>
         </div>
       </div>
