@@ -3,7 +3,25 @@ import React from 'react'
 function Modal(props) {
     const userInfo = props.msg;
 
+    const genderMap = {
+        male: "ذكر",
+        female: "أنثى"
+    };
 
+    const levelMap = {
+        1: "الأول",
+        2: "الثاني",
+        3: "الثالث",
+        4: "الرابع",
+        5: "الخامس",
+        6: "السادس",
+        7: "السابع",
+        8: "الثامن",
+        9: "التاسع",
+        10: "العاشر",
+        11: "الحادي عشر",
+        12: "الثاني عشر",
+    }
 
 
 
@@ -21,8 +39,8 @@ function Modal(props) {
                         البريد الإلكتروني: {userInfo.email} <br />
                         كلمة المرور: {userInfo.password} <br />
                         تاريخ الميلاد : {userInfo.birthdate} <br />
-                        {userInfo.type === "student" ? `الصف : ${userInfo.level}` : `التخصص : ${userInfo.subject}`}   <br />
-                        الجنس : {userInfo.gender} <br />
+                        {userInfo.type === "student" ? `الصف : ${levelMap[userInfo.level]}` : `التخصص : ${userInfo.subject}`}   <br />
+                        الجنس : {genderMap[userInfo.gender]} <br />
 
                     </div>
                     <div className="modal-footer no-print">

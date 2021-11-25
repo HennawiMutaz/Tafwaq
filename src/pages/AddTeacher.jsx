@@ -196,8 +196,8 @@ function AddTeacher() {
                                             <label className="label">الجنس</label>
                                             <select ref={gender} dir="rtl" className="form-control form-select" required>
                                                 <option value selected> </option>
-                                                <option value="ذكر">ذكر</option>
-                                                <option value="أنثى">أنثى</option>
+                                                <option value="male">ذكر</option>
+                                                <option value="female">أنثى</option>
                                             </select>
                                         </div>
                                     </div>
