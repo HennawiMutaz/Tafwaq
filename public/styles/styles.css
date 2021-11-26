@@ -291,3 +291,15 @@ body {
     display: none;
   }
 }
+
+/* edit - remove btns  */
+.fas.fa-edit:hover {
+  color: #0d6efd;
+  cursor: pointer;
+}
+
+
+/* sidebar icons */
+#sidebarMenu .nav-item:hover {
+  background-color: #d4d6d8;
+}

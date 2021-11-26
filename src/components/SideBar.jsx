@@ -1,26 +1,27 @@
 import React from 'react'
 
 function SideBar() {
+    const pathName = window.location.pathname;
     return (
         <div>
                 <nav id="sidebarMenu" className="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
       <div className="position-sticky pt-3">
         <ul className="nav flex-column">
           <li className="nav-item">
-            <a className="nav-link active" aria-current="page" href="/account">
+            <a className={pathName === "/account" ? "nav-link active" : "nav-link"} aria-current="page" href="/account">
             <i className="fas fa-home"></i>
               الرئيسية
             </a>
           </li>
           <li className="nav-item">
-            <a className="nav-link" href="/account/studentlist">
+            <a className={pathName === "/account/studentlist" ? "nav-link active" : "nav-link"} href="/account/studentlist">
             <i className="fas fa-user-friends"></i>
               قائمة الطلاب
             </a>
           </li>
           <li className="nav-item">
-            <a className="nav-link" href="/account/teacherlist">
-            <i class="fas fa-chalkboard-teacher"></i>
+            <a className={pathName === "/account/teacherlist" ? "nav-link active" : "nav-link"} href="/account/teacherlist">
+            <i className="fas fa-chalkboard-teacher"></i>
               قائمة المعلمين
             </a>
           </li>

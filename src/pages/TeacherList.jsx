@@ -38,6 +38,7 @@ function TeacherList() {
                             <th scope="col">اسم الاب</th>
                             <th scope="col">التخصص</th>
                             <th scope="col">البريد الإلكتروني</th>
+                            <th scope="col"></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -47,6 +48,7 @@ function TeacherList() {
                             <td>احمد</td>
                             <td>رياضيات</td>
                             <td>test2@tafwaq.edu.jo</td>
+                            <td><i class="fas fa-edit"></i></td>
                             </tr>
                             <tr>
                             <th scope="row">2</th>
@@ -54,6 +56,7 @@ function TeacherList() {
                             <td>محمد</td>
                             <td>علوم</td>
                             <td>test3@tafwaq.edu.jo</td>
+                            <td><i class="fas fa-edit"></i></td>
                             </tr>
                             <tr>
                             <th scope="row">3</th>
@@ -61,6 +64,7 @@ function TeacherList() {
                             <td>كريم</td>
                             <td>عربي</td>
                             <td>test4@tafwaq.edu.jo</td>
+                            <td><i class="fas fa-edit"></i></td>
                             </tr>
                         </tbody>
                         </table>
