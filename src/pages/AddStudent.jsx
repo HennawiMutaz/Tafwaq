@@ -42,7 +42,7 @@ function AddStudent() {
         
         // 
 
-        const email = firstNameEn.current.value.slice(0,2) + midNameEn.current.value.slice(0,2) + lastNameEn.current.value + birthdate.current.value.slice(0,4) + "@tafwaq.edu.jo";
+        const email = firstNameEn.current.value.trim().toLowerCase().slice(0,2) + midNameEn.current.value.trim().toLowerCase().slice(0,2) + lastNameEn.current.value.trim().toLowerCase() + birthdate.current.value.slice(0,4) + "@tafwaq.edu.jo";
         console.log(email);
 
         let chars = "0123456789abcdefghijklmnopqrstuvwxyz!@#$%^&*()ABCDEFGHIJKLMNOPQRSTUVWXYZ";

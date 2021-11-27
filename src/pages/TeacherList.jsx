@@ -1,7 +1,44 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import { db, useAuth } from '../fbConfig'
 import Header from '../components/Header'
 import SideBar from '../components/SideBar'
+import { query, where, getDocs, collection } from 'firebase/firestore';
+import TableEntry from '../components/TableEntry';
+
 function TeacherList() {
+
+    const user = useAuth();
+    // const [isloading, setIsloading] = useState(true);
+    const [list, setList] = useState([])
+    let temp = [];
+    function createTable(elem) {
+        let keyVal = Math.random();
+        return (
+            <TableEntry
+             key={keyVal}
+             user={elem} />
+        );
+    }
+
+    useEffect(() => {
+        async function getUser () {
+          try {
+            const q = query(collection(db, "users"), where("type", "==", "teacher"));
+
+            const querySnapshot = await getDocs(q);
+            querySnapshot.forEach((doc) => {
+                console.log(doc.id, " => ", doc.data());
+                temp.push(doc.data());
+            });            
+           } catch (error) {
+               console.log(error);
+           } finally {
+               setList(temp);
+           }
+           
+       }    
+       return getUser();
+       }, [])
 
     return (
         <div>       
@@ -35,37 +72,13 @@ function TeacherList() {
                             <tr>
                             <th scope="col">#</th>
                             <th scope="col">اسم المعلم</th>
-                            <th scope="col">اسم الاب</th>
                             <th scope="col">التخصص</th>
                             <th scope="col">البريد الإلكتروني</th>
                             <th scope="col"></th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                            <th scope="row">1</th>
-                            <td>محمد</td>
-                            <td>احمد</td>
-                            <td>رياضيات</td>
-                            <td>test2@tafwaq.edu.jo</td>
-                            <td><i class="fas fa-edit"></i></td>
-                            </tr>
-                            <tr>
-                            <th scope="row">2</th>
-                            <td>خالد</td>
-                            <td>محمد</td>
-                            <td>علوم</td>
-                            <td>test3@tafwaq.edu.jo</td>
-                            <td><i class="fas fa-edit"></i></td>
-                            </tr>
-                            <tr>
-                            <th scope="row">3</th>
-                            <td>رائد</td>
-                            <td>كريم</td>
-                            <td>عربي</td>
-                            <td>test4@tafwaq.edu.jo</td>
-                            <td><i class="fas fa-edit"></i></td>
-                            </tr>
+                            {list.map(createTable)}
                         </tbody>
                         </table>
                     </div>

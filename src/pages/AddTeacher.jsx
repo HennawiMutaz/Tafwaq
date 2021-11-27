@@ -39,19 +39,20 @@ function AddTeacher() {
     function handleAddTeacher(e) {
         e.preventDefault();
         setIsLoading(true);
-        console.log(firstName.current.value);
-        console.log(midName.current.value);
-        console.log(lastName.current.value);
-        console.log(firstNameEn.current.value);
-        console.log(midNameEn.current.value);
-        console.log(lastNameEn.current.value);
-        console.log(birthdate.current.value);
-        console.log(subject.current.value);
-        console.log(gender.current.value); 
+        // console.log(firstName.current.value);
+        // console.log(midName.current.value);
+        // console.log(lastName.current.value);
+        // console.log(firstNameEn.current.value);
+        // console.log(midNameEn.current.value);
+        // console.log(lastNameEn.current.value);
+        // console.log(birthdate.current.value);
+        // console.log(subject.current.value);
+        // console.log(gender.current.value); 
         
         // 
 
-        const email = firstNameEn.current.value.slice(0,2) + midNameEn.current.value.slice(0,2) + lastNameEn.current.value + birthdate.current.value.slice(0,4) + "@tafwaq.edu.jo";
+        const email = firstNameEn.current.value.trim().toLowerCase().slice(0,2) + midNameEn.current.value.trim().toLowerCase().slice(0,2) + lastNameEn.current.value.trim().toLowerCase() + birthdate.current.value.slice(0,4) + "@tafwaq.edu.jo";
+
         console.log(email);
 
         let chars = "0123456789abcdefghijklmnopqrstuvwxyz!@#$%^&*()ABCDEFGHIJKLMNOPQRSTUVWXYZ";

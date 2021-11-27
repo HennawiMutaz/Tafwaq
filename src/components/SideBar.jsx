@@ -14,13 +14,13 @@ function SideBar() {
             </a>
           </li>
           <li className="nav-item">
-            <a className={pathName === "/account/studentlist" ? "nav-link active" : "nav-link"} href="/account/studentlist">
+            <a className={pathName === "/account/studentlist" || pathName === "/account/addstudent" ? "nav-link active" : "nav-link"} href="/account/studentlist">
             <i className="fas fa-user-friends"></i>
               قائمة الطلاب
             </a>
           </li>
           <li className="nav-item">
-            <a className={pathName === "/account/teacherlist" ? "nav-link active" : "nav-link"} href="/account/teacherlist">
+            <a className={pathName === "/account/teacherlist" || pathName === "/account/addteacher"  ? "nav-link active" : "nav-link"} href="/account/teacherlist">
             <i className="fas fa-chalkboard-teacher"></i>
               قائمة المعلمين
             </a>
