@@ -25,6 +25,12 @@ function SideBar() {
               قائمة المعلمين
             </a>
           </li>
+          <li className="nav-item">
+            <a className={pathName === "/account/classroomlist" || pathName === "/account/addclassroom"  ? "nav-link active" : "nav-link"} href="/account/classroomlist">
+            <i className="fas fa-chalkboard"></i>
+              الصفوف
+            </a>
+          </li>
           
         </ul>
 

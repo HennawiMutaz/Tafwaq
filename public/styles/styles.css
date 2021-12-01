@@ -293,7 +293,7 @@ body {
 }
 
 /* edit - remove btns  */
-.fas.fa-edit:hover {
+.fas.fa-edit:hover, .fas.fa-user-plus:not(a i):hover{
   color: #0d6efd;
   cursor: pointer;
 }

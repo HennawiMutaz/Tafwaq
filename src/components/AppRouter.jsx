@@ -9,6 +9,8 @@ import NotFoundPage from '../pages/NotFoundPage'
 import AddStudent from '../pages/AddStudent'
 import TeacherList from '../pages/TeacherList'
 import AddTeacher from '../pages/AddTeacher'
+import ClassroomList from '../pages/ClassroomList'
+import AddClassroom from '../pages/AddClassroom'
 
 
 
@@ -28,6 +30,8 @@ function AppRouter() {
                     <Route exact path='/account/addstudent' element={ <AddStudent /> } />
                     <Route exact path='/account/teacherlist' element={ <TeacherList /> } />
                     <Route exact path='/account/addteacher' element={ <AddTeacher /> } />
+                    <Route exact path='/account/classroomlist' element={ <ClassroomList /> } />
+                    <Route exact path='/account/addclassroom' element={ <AddClassroom /> } />
                     <Route  path="*" element={ <NotFoundPage/> } />
                 </Routes>
             </BrowserRouter> 

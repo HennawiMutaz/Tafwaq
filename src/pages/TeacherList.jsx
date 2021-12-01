@@ -11,12 +11,16 @@ function TeacherList() {
     // const [isloading, setIsloading] = useState(true);
     const [list, setList] = useState([])
     let temp = [];
+    let counter = 1;
     function createTable(elem) {
         let keyVal = Math.random();
         return (
             <TableEntry
              key={keyVal}
-             user={elem} />
+             user={elem} 
+             icon="fas fa-edit"
+             counter={counter++}    
+             />
         );
     }
 

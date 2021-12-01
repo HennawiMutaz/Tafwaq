@@ -5,23 +5,26 @@ import SideBar from '../components/SideBar'
 import { query, where, getDocs, collection } from 'firebase/firestore';
 import TableEntry from '../components/TableEntry';
 
-function StudentList() {
+function ClassroomList() {
     const user = useAuth();
     // const [isloading, setIsloading] = useState(true);
     const [list, setList] = useState([])
     let temp = [];
     let counter = 1;
     function createTable(elem) {
-        let keyVal = Math.random();
         return (
-            <TableEntry key={keyVal} user={elem} icon="fas fa-edit" counter={counter++} />
+             <tr>
+                <th scope="row">{counter++}</th>
+                <td>{elem.name}</td>
+                <td> <i className="fas fa-edit"></i> </td>
+            </tr>
         );
     }
 
     useEffect(() => {
-        async function getUser () {
+        async function getClassrooms () {
           try {
-            const q = query(collection(db, "users"), where("type", "==", "student"));
+            const q = query(collection(db, "classrooms"));
 
             const querySnapshot = await getDocs(q);
             querySnapshot.forEach((doc) => {
@@ -35,7 +38,7 @@ function StudentList() {
            }
            
        }    
-       return getUser();
+       return getClassrooms();
        }, [])
 
 
@@ -50,11 +53,11 @@ function StudentList() {
                 {/* title header & add student btn */}
                 <main className="col-md-9 ms-sm-auto col-lg-10 px-md-4">
                     <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                        <h1 className="h2">قائمة الطلاب</h1>
+                        <h1 className="h2">قائمة الصفوف</h1>
                         <div className="btn-toolbar mb-2 mb-md-0">
                             <div className="alert d-flex justify-content-end" role="alert">
-                                <a className="btn btn-primary btn-lg" href="/account/addstudent">
-                                    <span> إضافة طالب </span>
+                                <a className="btn btn-primary btn-lg" href="/account/addclassroom">
+                                    <span> إضافة صف </span>
                                     <i className="fas fa-user-plus" />
                                 </a>
                             </div>
@@ -67,15 +70,14 @@ function StudentList() {
                     <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
                     <div className="col-10 mx-auto mt-5">
                     <table className="table table-striped table-hover table-bordered">
-                        <thead>
+                        <thead style={{display: list.length ? null : "none" }}>
                             <tr>
                             <th scope="col">#</th>
-                            <th scope="col">اسم الطالب</th>
-                            <th scope="col">الصف</th>
-                            <th scope="col">البريد الإلكتروني</th>
+                            <th scope="col">اسم الصف</th>
                             <th scope="col"></th>
                             </tr>
                         </thead>
+                        <h1 style={{display: !list.length ? null : "none"}} className="text-center">لا توجد بيانات</h1>
                         <tbody>
                             {list.map(createTable)}
                         </tbody>
@@ -92,4 +94,4 @@ function StudentList() {
     )
 }
 
-export default StudentList
+export default ClassroomList

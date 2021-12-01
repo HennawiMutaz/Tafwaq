@@ -73,6 +73,7 @@ function AddStudent() {
                     level: level.current.value,
                     gender: gender.current.value,
                     email: email,
+                    uid: user.uid,
                     //
                     type: "student",
                     createdAt: serverTimestamp(),
