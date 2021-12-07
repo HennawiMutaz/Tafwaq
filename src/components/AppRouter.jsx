@@ -11,6 +11,11 @@ import TeacherList from '../pages/TeacherList'
 import AddTeacher from '../pages/AddTeacher'
 import ClassroomList from '../pages/ClassroomList'
 import AddClassroom from '../pages/AddClassroom'
+import StudentDashboard from '../pages/StudentPages/StudentDashboard'
+import StudentActivity from '../pages/StudentPages/StudentActivity'
+import AllClasses from '../pages//StudentPages/AllClasses'
+import Paperwork from '../pages/StudentPages/Paperwork'
+import StudentQuiz from '../pages/StudentPages/StudentQuiz'
 
 
 
@@ -19,6 +24,7 @@ function AppRouter() {
 
     const auth = useAuth();
     
+        
     return (
         <>
             <BrowserRouter>
@@ -32,6 +38,13 @@ function AppRouter() {
                     <Route exact path='/account/addteacher' element={ <AddTeacher /> } />
                     <Route exact path='/account/classroomlist' element={ <ClassroomList /> } />
                     <Route exact path='/account/addclassroom' element={ <AddClassroom /> } />
+
+                    <Route exact path='/student' element={ <StudentDashboard /> } />
+                    <Route exact path='/student/class' element={ <StudentActivity /> } />
+                    <Route exact path='/student/all-classes' element={ <AllClasses /> } />
+                    <Route exact path='/student/paperwork' element={ <Paperwork /> } />
+                    <Route exact path='/student/quiz' element={ <StudentQuiz /> } />
+
                     <Route  path="*" element={ <NotFoundPage/> } />
                 </Routes>
             </BrowserRouter> 

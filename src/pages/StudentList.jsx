@@ -6,6 +6,7 @@ import { query, where, getDocs, collection } from 'firebase/firestore';
 import TableEntry from '../components/TableEntry';
 
 function StudentList() {
+
     const user = useAuth();
     // const [isloading, setIsloading] = useState(true);
     const [list, setList] = useState([])
@@ -18,23 +19,24 @@ function StudentList() {
         );
     }
 
-    useEffect(() => {
-        async function getUser () {
-          try {
-            const q = query(collection(db, "users"), where("type", "==", "student"));
+    async function getUser () {
+        try {
+          const q = query(collection(db, "users"), where("type", "==", "student"));
 
-            const querySnapshot = await getDocs(q);
-            querySnapshot.forEach((doc) => {
-                console.log(doc.id, " => ", doc.data());
-                temp.push(doc.data());
-            });            
-           } catch (error) {
-               console.log(error);
-           } finally {
-               setList(temp);
-           }
-           
-       }    
+          const querySnapshot = await getDocs(q);
+          querySnapshot.forEach((doc) => {
+              console.log(doc.id, " => ", doc.data());
+              temp.push(doc.data());
+          });            
+         } catch (error) {
+             console.log(error);
+         } finally {
+             setList(temp);
+         }
+         
+     }  
+
+    useEffect(() => {
        return getUser();
        }, [])
 

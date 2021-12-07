@@ -1,7 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react'
 import { login } from '../fbConfig'
 import Preloader from '../components/Preloader';
-import { useNavigate } from 'react-router';
 
 function LoginPage() {
 
@@ -9,17 +8,15 @@ function LoginPage() {
   const emailRef = useRef();
   const passwordRef = useRef();
   const [isloading, setIsloading] = useState(true);
-  const navigate = useNavigate();
 
 
   async function handleLogin(e) {
     e.preventDefault();
     try {
       await login(emailRef.current.value.trim(), passwordRef.current.value); 
-      // navigate('/account', { replace: true })
       window.location.replace('/account');
     } catch (error) {
-      console.log(error);
+      console.log(error.code);
       setIncorrect(true);
     } 
   }
@@ -28,7 +25,7 @@ function LoginPage() {
   useEffect(() => {
     setTimeout(() => {
       setIsloading(false);
-    }, 1000);
+    }, 800);
     return;
   }, [])
 
@@ -53,11 +50,11 @@ function LoginPage() {
                   <h1 className="h3 mb-3 fw-normal text-center mb-4">تسجيل الدخول</h1>
                   <form onSubmit={handleLogin}>
                     <div className="input-group">
-                      <input ref={emailRef} type="email" className="form-control" placeholder="البريد الإلكتروني" />
+                      <input required ref={emailRef} type="email" className="form-control" placeholder="البريد الإلكتروني" />
                     </div>
                     
                     <div className="input-group">
-                      <input ref={passwordRef} type="password" className="form-control" placeholder="كلمة السر" />
+                      <input required ref={passwordRef} type="password" className="form-control" placeholder="كلمة السر" />
                     </div>
 
                     <button className="w-100 btn btn-lg btn-primary" type="submit">الدخول</button>
@@ -68,7 +65,7 @@ function LoginPage() {
           </div>
           <div style={incorrect ? { opacity:1, } : {opacity:0}} className="row align-items-center mt-4">
             <div className="alert alert-danger" role="alert">
-            معلومات غير صحيحة
+              عنوان البريد الإلكتروني أو كلمة المرور خاطئين
             </div>
           </div>
         </div>

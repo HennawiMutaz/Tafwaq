@@ -16,11 +16,26 @@ import {
   setDoc,
 } from 'firebase/firestore';
 import { db } from '../fbConfig';
+import { initializeApp } from "firebase/app";
+import {getFirestore} from "@firebase/firestore";
+import { getAuth, createUserWithEmailAndPassword, onAuthStateChanged, signOut, signInWithEmailAndPassword } from 'firebase/auth';
 
 
 
 
 function AddStudent() {
+
+    
+    let config = {
+        apiKey: "AIzaSyAZU9mr36OLEC5rM-5WcWcGKueAFu5fTb4",
+        authDomain: "tfwaq-36acd.firebaseapp.com",
+        projectId: "tfwaq-36acd",
+        storageBucket: "tfwaq-36acd.appspot.com",
+        messagingSenderId: "353022946163",
+        appId: "1:353022946163:web:509cb82e1c8b2fa21b7306"
+    };
+    let secondaryApp = initializeApp(config, "Secondary");
+    const auth = getAuth(secondaryApp);
 
     const lastName = useRef();
     const midName = useRef();
@@ -56,7 +71,7 @@ function AddStudent() {
         
         console.log(password);
 
-        signup(email, password).then(async (result) => {
+        createUserWithEmailAndPassword(auth, email, password).then(async (result) => {
             const user = result.user;
             
             if (user) {
@@ -95,6 +110,8 @@ function AddStudent() {
             document.getElementById("ModalBtn").click();
             //reset form
             document.getElementById("Reset").click();
+
+            signOut(auth);
         });
         
     }

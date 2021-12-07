@@ -2,6 +2,7 @@ import React, { useRef, useState } from 'react'
 import Header from '../components/Header';
 import SideBar from '../components/SideBar';
 import TableEntry from '../components/TableEntry';
+import ModalInfo from '../components/ModalInfo';
 import {
     collection,
     addDoc,
@@ -14,7 +15,9 @@ import {
     orderBy,
     where,
     setDoc,
-    getDocs
+    getDocs,
+    arrayUnion,
+    arrayRemove,
 } from 'firebase/firestore';
 import { db } from '../fbConfig';
 
@@ -45,22 +48,33 @@ function AddClassroom() {
         5: "هـ",
     }
 
-    function updateStudentClassroom() {
-        // List[index].uid
-        const Ref = doc(db, "users",);
+    async function updateStudentClassroom(uid) {
+        const Ref = doc(db, "users", uid);
 
-        // Set the "capital" field of the city 'DC'
-        // await updateDoc(washingtonRef, {
-        //     capital: true
-        // });
+        await updateDoc(Ref, {
+            classroomID: id
+        });
+    }
+
+    async function updateTeacherClassroom(uid) {
+        try {
+            const Ref = doc(db, "users", uid);
+
+            await updateDoc(Ref, {
+                classroomsIDs: arrayUnion(id)
+            });    
+        } catch (error) {
+            console.log(error);
+        }
+        
     }
 
 
     let stdCounter = 1, tCounter = 1;
     function createTable(elem) {
         let keyVal = Math.random();
-        return ( 
-            <TableEntry key={keyVal} user={elem} icon="fas fa-user-plus" counter={elem.type==="student" ? stdCounter++ : tCounter++} />
+        return (
+            <TableEntry teafun={updateTeacherClassroom} stdfun={updateStudentClassroom} key={keyVal} user={elem} icon="fas fa-user-plus" counter={elem.type === "student" ? stdCounter++ : tCounter++} />
         );
     }
 
@@ -68,6 +82,9 @@ function AddClassroom() {
     const level = useRef();
     const sectionNumber = useRef();
     const classroomRef = doc(collection(db, 'classrooms'));
+    const mathRef = doc(collection(db, 'subjects'));
+    const englishRef = doc(collection(db, 'subjects'));
+    const [modalMessage, setModalMessage] = useState("");
     let temp = [];
     let temp2 = [];
     const [teachers, setTeachers] = useState([]);
@@ -80,20 +97,49 @@ function AddClassroom() {
     async function handleAddClassroom(e) {
         e.preventDefault();
         setIsLoading(true);
+        console.log(level.current.value, sectionNumber.current.value);
+        // if (level.current.value || sectionNumber.current.value) {
+        //     setModalMessage("الرجاء إدخال المعلومات بشكل صحيح");
+        //     document.getElementById("ModalInfoBtn").click();
+        //     setIsLoading(false);
+        //     return;
+        // }
         // Generate Classroom Name
-        setClassroomName(`${levelMap[level?.current?.value]}  (${sectionNumberMap [sectionNumber?.current?.value]})`);
+        setClassroomName(`${levelMap[level?.current?.value]}  (${sectionNumberMap[sectionNumber?.current?.value]})`);
 
         const newClassroom = {
             level: level.current.value,
-            name: `${levelMap[level?.current?.value]}  (${sectionNumberMap [sectionNumber?.current?.value]})`,
+            name: `${levelMap[level?.current?.value]}  (${sectionNumberMap[sectionNumber?.current?.value]})`,
             sectionNumber: sectionNumber.current.value,
             createdAt: serverTimestamp(),
             id: "",
         };
+        const math = {
+            name: "math",
+            level: level.current.value,
+            className: `${levelMap[level?.current?.value]}  (${sectionNumberMap[sectionNumber?.current?.value]})`,
+            createdAt: serverTimestamp(),
+            id: "",
+            classroomID: "",
+        }
+        const english = {
+            name: "english",
+            level: level.current.value,
+            className: `${levelMap[level?.current?.value]}  (${sectionNumberMap[sectionNumber?.current?.value]})`,
+            createdAt: serverTimestamp(),
+            id: "",
+            classroomID: "",
+        }
+        math.classroomID = classroomRef.id;
+        english.classroomID = classroomRef.id;
+
+
         newClassroom.id = classroomRef.id;
         setIsLoading(true);
         setId(newClassroom.id);
         await setDoc(classroomRef, newClassroom);
+        await setDoc(mathRef, math);
+        await setDoc(englishRef, english);
         setIsLoading(false);
         setIsCompleted(true);
 
@@ -124,7 +170,8 @@ function AddClassroom() {
 
     return (
         <div>
-            <a id="ModalBtn" data-bs-toggle="modal" data-bs-target="#Modal"></a>
+            <a id="ModalInfoBtn" data-bs-toggle="modal" data-bs-target="#ModalInfo"></a>
+            <ModalInfo msg={modalMessage} />
             <Header />
             <SideBar />
             <div className="container-fluid no-print">
@@ -187,48 +234,48 @@ function AddClassroom() {
                                 <div style={{ display: completed ? null : "none" }} className="container-fluid row mt-5">
                                     {/* Class Info */}
 
-                                            <div className="col-10">
-                                                <h1>اسم الصف: {classroomName ?? ""}</h1>
-                                            </div>
+                                    <div className="col-10">
+                                        <h1>اسم الصف: {classroomName ?? ""}</h1>
+                                    </div>
                                     {/* End of Class Info */}
 
                                     {/* Teacher Table */}
-                                            <div className="col-10 mt-5">
-                                                <h2 className="mb-3"> المعلمين </h2>
-                                                <table className="table table-striped table-bordered">
-                                                    <thead>
-                                                        <tr>
-                                                            <th scope="col">#</th>
-                                                            <th scope="col">اسم المعلم</th>
-                                                            <th scope="col">المادة</th>
-                                                            <th scope="col">البريد الإلكتروني</th>
-                                                            <th scope="col"></th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        {teachers.map(createTable)}
-                                                    </tbody>
-                                                </table>
-                                            </div>
+                                    <div className="col-10 mt-5">
+                                        <h2 className="mb-3"> المعلمين </h2>
+                                        <table className="table table-striped table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th scope="col">#</th>
+                                                    <th scope="col">اسم المعلم</th>
+                                                    <th scope="col">المادة</th>
+                                                    <th scope="col">البريد الإلكتروني</th>
+                                                    <th scope="col"></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {teachers.map(createTable)}
+                                            </tbody>
+                                        </table>
+                                    </div>
                                     {/* End of Teacher Table */}
                                     {/* Student Table */}
-                                            <div className="col-10 mt-5">
-                                                <h2 className="mb-3"> الطلاب </h2>
-                                                <table className="table table-striped table-bordered">
-                                                    <thead>
-                                                        <tr>
-                                                            <th scope="col">#</th>
-                                                            <th scope="col">اسم الطالب</th>
-                                                            <th scope="col">الصف</th>
-                                                            <th scope="col">البريد الإلكتروني</th>
-                                                            <th scope="col"></th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        {list.map(createTable)}
-                                                    </tbody>
-                                                </table>
-                                            </div>
+                                    <div className="col-10 mt-5">
+                                        <h2 className="mb-3"> الطلاب </h2>
+                                        <table className="table table-striped table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th scope="col">#</th>
+                                                    <th scope="col">اسم الطالب</th>
+                                                    <th scope="col">الصف</th>
+                                                    <th scope="col">البريد الإلكتروني</th>
+                                                    <th scope="col"></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {list.map(createTable)}
+                                            </tbody>
+                                        </table>
+                                    </div>
                                     {/* End of Student Table */}
 
                                 </div>
