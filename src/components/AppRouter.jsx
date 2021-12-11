@@ -3,7 +3,7 @@ import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom'
 import HomePage from '../pages/HomePage'
 import LoginPage from '../pages/LoginPage'
 import Account from '../pages/AdminPage'
-import { useAuth } from '../fbConfig'
+import { GetUser, useAuth } from '../fbConfig'
 import StudentList from '../pages/StudentList'
 import NotFoundPage from '../pages/NotFoundPage'
 import AddStudent from '../pages/AddStudent'
@@ -22,8 +22,10 @@ import StudentQuiz from '../pages/StudentPages/StudentQuiz'
 
 function AppRouter() {
 
+    //current user
     const auth = useAuth();
     
+    const user = GetUser(auth);
         
     return (
         <>

@@ -4,66 +4,78 @@ import { doc, getDoc } from 'firebase/firestore';
 import Preloader from '../components/Preloader';
 import SideBar from '../components/SideBar';
 import Header from '../components/Header';
+import StudentDashboard from './StudentPages/StudentDashboard';
 
 function Account() {
   // const user = auth.currentUser;
   const user = useAuth();
   const [info, setInfo] = useState(null);
   const [isloading, setIsloading] = useState(true);
- 
 
-    // Triggers at load
-    useEffect(() => {
-     async function getUser () {
-       try {
-         const docRef = doc(db, "users", user.uid);
-         const docSnap = await getDoc(docRef);
-         if (docSnap.exists()) {
-           console.log("Document data:", docSnap.data());
-           const admin = docSnap.data();
-           setInfo(admin);
-           setIsloading(false);
-         } else {
-           // doc.data() will be undefined in this case
-           console.log("No such document!");
-         }
-        } catch (error) {
-         console.log(error);
+
+  // Triggers at load
+  useEffect(() => {
+    async function getUser() {
+      try {
+        const docRef = doc(db, "users", user.uid);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          // console.log("Document data:", docSnap.data());
+          const admin = docSnap.data();
+          setInfo(admin);
+          setIsloading(false);
+        } else {
+          // doc.data() will be undefined in this case
+          console.log("No such document!");
         }
-    }    
+      } catch (error) {
+        console.log(error);
+      }
+    }
 
     return getUser();
-    }, [user])
-    
+  }, [user])
+
+  if (isloading)
+    return (
+      <Preloader hide={!isloading ? { opacity: 0, zIndex: -1 } : null} />
+    );
+
+  if (!isloading && info.type === "admin")
+    return (
+      <div>
+
+        <Header />
+        <SideBar />
 
 
-  return (
-    <div>
-    <Preloader hide={!isloading ? {opacity:0, zIndex:-1} : null} />
-   
-  <Header />
-  <SideBar />
+        <div className="container-fluid">
+          <div className="row">
+            <main className="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+              <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <h1 className="h2">الرئيسية</h1>
+                <div className="btn-toolbar mb-2 mb-md-0">
+                  <div className="alert d-flex justify-content-end" role="alert">
+                    <h4 className="alert-heading fw-bolder"> مرحباً {info?.firstNameAr} </h4>
+                  </div>
+                </div>
+              </div>
 
-<div className="container-fluid">
-  <div className="row">
-    <main className="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-      <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-        <h1 className="h2">الرئيسية</h1>
-        <div className="btn-toolbar mb-2 mb-md-0">
-        <div className="alert d-flex justify-content-end" role="alert">
-    <h4 className="alert-heading fw-bolder"> مرحباً {info?.firstNameAr} </h4>
-    </div>
+              {/* TODO: INSERT IMAGE HERE */}
+              <img src="/images/admin-dashboard.svg" className="my-4 w-100" id="myChart" width="900" height="380"></img>
+
+
+            </main>
+          </div>
         </div>
       </div>
-
-      {/* TODO: INSERT IMAGE HERE */}
-      <img src="/images/admin-dashboard.svg" className="my-4 w-100" id="myChart" width="900" height="380"></img> 
-
-    
-    </main>
-  </div>
-</div>
-      </div>
+    );
+  
+  if (!isloading && info.type === "student" )
+  return (
+    <div>
+     <StudentDashboard info={info} />
+    </div>
   )
 }
 

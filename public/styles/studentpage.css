@@ -80,6 +80,10 @@
   .card:hover > div h6 {
     color: #fff !important;
   }
+  .card:hover img.card-img {
+    transition: 0.5s;
+    transform: scale(1.1);
+  }
   
   a {
     text-decoration: none !important;
@@ -677,6 +681,7 @@
     }
     a:hover{
       text-decoration: none !important;
+      color: inherit;
     }
     
     .center-card {
@@ -684,3 +689,9 @@
       display: flex;
     justify-content: center;
       }
+
+    @media (max-width: 992px) {
+      .cards .card img.card-img {
+        display: none;
+      }
+    }

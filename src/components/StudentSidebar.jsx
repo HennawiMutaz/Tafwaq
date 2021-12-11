@@ -14,21 +14,21 @@ function StudentSidebar() {
                             </a>
                         </li>
                         <li className="nav-item">
-                            <a className={pathName === "/account/studentlist" || pathName === "/account/addstudent" ? "nav-link active" : "nav-link"} href="/account/studentlist">
-                                <i className="fas fa-user-friends"></i>
-                                قائمة الطلاب
+                            <a className={pathName === "" || pathName === "" ? "nav-link active" : "nav-link"} href="/account/studentlist">
+                                <i class="fas fa-book"></i>
+                                المواد
                             </a>
                         </li>
                         <li className="nav-item">
-                            <a className={pathName === "/account/teacherlist" || pathName === "/account/addteacher" ? "nav-link active" : "nav-link"} href="/account/teacherlist">
-                                <i className="fas fa-chalkboard-teacher"></i>
-                                قائمة المعلمين
+                            <a className={pathName === "" || pathName === "" ? "nav-link active" : "nav-link"} href="/account/teacherlist">
+                                <i class="fas fa-user"></i>
+                               الملف الشخصي
                             </a>
                         </li>
                         <li className="nav-item">
-                            <a className={pathName === "/account/classroomlist" || pathName === "/account/addclassroom" ? "nav-link active" : "nav-link"} href="/account/classroomlist">
-                                <i className="fas fa-chalkboard"></i>
-                                الصفوف
+                            <a className={pathName === "" || pathName === "" ? "nav-link active" : "nav-link"} href="/account/classroomlist">
+                                <i class="fas fa-key"></i>
+                                تغيير كلمة السر
                             </a>
                         </li>
 

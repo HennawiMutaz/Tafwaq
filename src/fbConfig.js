@@ -2,6 +2,7 @@ import {useEffect, useState} from 'react';
 import { initializeApp } from "firebase/app";
 import {getFirestore} from "@firebase/firestore";
 import { getAuth, createUserWithEmailAndPassword, onAuthStateChanged, signOut, signInWithEmailAndPassword } from 'firebase/auth';
+import { doc, getDoc } from 'firebase/firestore';
 
 
 const firebaseConfig = {
@@ -33,6 +34,8 @@ export function logout() {
 }
 
 
+
+
 // Custom Hook
 export function useAuth() {
   const [currentUser, setCurrentUser] = useState();
@@ -46,3 +49,23 @@ export function useAuth() {
 }
 
 
+
+
+export async function GetUser (user) {
+  const [info, setInfo] = useState(null);
+  try {
+    const docRef = doc(db, "users", user.uid);
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+      // console.log("Document data:", docSnap.data());
+      const admin = docSnap.data();
+      setInfo(admin);
+    } else {
+      // doc.data() will be undefined in this case
+      console.log("No such document!");
+    }
+   } catch (error) {
+    console.log(error);
+   }
+   return info;
+}    
