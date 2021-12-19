@@ -5,6 +5,7 @@ import Preloader from '../components/Preloader';
 import SideBar from '../components/SideBar';
 import Header from '../components/Header';
 import StudentDashboard from './StudentPages/StudentDashboard';
+import TeacherDashboard from './TeacherPages/TeacherDashboard';
 
 function Account() {
   // const user = auth.currentUser;
@@ -61,7 +62,7 @@ function Account() {
                 </div>
               </div>
 
-              {/* TODO: INSERT IMAGE HERE */}
+              
               <img src="/images/admin-dashboard.svg" className="my-4 w-100" id="myChart" width="900" height="380"></img>
 
 
@@ -77,6 +78,15 @@ function Account() {
      <StudentDashboard info={info} />
     </div>
   )
+
+  if (!isloading && info.type === "teacher" )
+  return (
+    <div>
+     <TeacherDashboard info={info} />
+    </div>
+  )
+
+  
 }
 
 export default Account

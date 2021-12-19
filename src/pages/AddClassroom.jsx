@@ -48,6 +48,25 @@ function AddClassroom() {
         5: "هـ",
     }
 
+    // const btns = document.getElementsByClassName("fas fa-user-plus");
+   
+    // for(let i = 0; i < btns.length; i++) {
+    //     btns[i].addEventListener('click', () => {
+        
+    //         if (btns[i].classList.contains("fa-user-plus")) {
+    //             btns[i].classList.add("fa-user-minus");
+    //             btns[i].classList.remove("fa-user-plus");
+    //         } else {
+    //             btns[i].classList.remove("fa-user-minus");
+    //             btns[i].classList.add("fa-user-plus");
+    //         }
+    //     })
+    // }
+    
+
+
+
+
     async function updateStudentClassroom(uid) {
         const Ref = doc(db, "users", uid);
 
@@ -74,7 +93,7 @@ function AddClassroom() {
     function createTable(elem) {
         let keyVal = Math.random();
         return (
-            <TableEntry teafun={updateTeacherClassroom} stdfun={updateStudentClassroom} key={keyVal} user={elem} icon="fas fa-user-plus" counter={elem.type === "student" ? stdCounter++ : tCounter++} />
+            <TableEntry teafun={updateTeacherClassroom} stdfun={updateStudentClassroom} key={keyVal} user={elem} icon="fas fa-user-plus icon-hover" counter={elem.type === "student" ? stdCounter++ : tCounter++} />
         );
     }
 
@@ -93,6 +112,7 @@ function AddClassroom() {
     const [isLoading, setIsLoading] = useState(false);
     const [completed, setIsCompleted] = useState(false);
     const [id, setId] = useState("")
+    const [saved, setSaved] = useState(false);
 
     async function handleAddClassroom(e) {
         e.preventDefault();
@@ -132,7 +152,8 @@ function AddClassroom() {
         }
         math.classroomID = classroomRef.id;
         english.classroomID = classroomRef.id;
-
+        math.id = mathRef.id;
+        english.id = englishRef.id;
 
         newClassroom.id = classroomRef.id;
         setIsLoading(true);
@@ -161,6 +182,8 @@ function AddClassroom() {
         } finally {
             setTeachers(temp2);
             setList(temp);
+            console.log("saved");
+            setSaved(true);
         }
 
 
@@ -181,11 +204,11 @@ function AddClassroom() {
                         <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
                             <h1 className="h2"> {completed ? "إضافة الطلاب و المعلمين للصف" : "إضافة صف"} </h1>
                             <div className="btn-toolbar mb-2 mb-md-0">
-                                <div className="alert d-flex justify-content-end" role="alert">
-                                    <a className="btn btn-primary btn-lg" href="" onClick={handleAddClassroom}>
+                                <div  className="alert d-flex justify-content-end" role="alert">
+                                    <button style={{display: saved ? "none" : null }} className="button" onClick={handleAddClassroom}>
                                         <span className="mx-1"> حفظ </span>
                                         <div style={{ display: isLoading ? null : "none" }} className="spinner-border spinner-border-sm" role="status"></div>
-                                    </a>
+                                    </button>
                                 </div>
                             </div>
                         </div>

@@ -695,3 +695,73 @@
         display: none;
       }
     }
+
+    .card h1, .card h6 {
+      font-weight: 900;
+    }
+
+    /* Change Password */
+    /* Style all input fields */
+.change-password input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  margin-top: 6px;
+  margin-bottom: 16px;
+}
+
+/* Style the submit button */
+
+/* Style the container for inputs */
+.change-password .container {
+  background-color: #f1f1f1;
+  padding: 20px;
+}
+
+/* The message box is shown when the user clicks on the password field */
+#message, #confirm-message {
+  display:none;
+  background: #f1f1f1;
+  color: #000;
+  position: relative;
+  padding: 20px;
+  margin-top: 10px;
+}
+
+#message p, #confirm-message p {
+  padding: 10px 35px;
+  font-size: 18px;
+}
+
+/* Add a green text color and a checkmark when the requirements are right */
+.change-password .valid {
+  color: green;
+}
+
+.change-password .valid:before {
+  position: relative;
+  left: 35px;
+  content: "✓";
+}
+
+/* Add a red text color and an "x" icon when the requirements are wrong */
+.change-password .invalid {
+  color: red;
+}
+
+.change-password .invalid:before {
+  position: relative;
+  left: 35px;
+  content: "✖";
+}
+
+button:disabled {
+  background-color: grey;
+  opacity: 0.6;
+  cursor: not-allowed
+}
+button:disabled:hover {
+  background-color: grey;
+}

@@ -1,6 +1,6 @@
 import React from 'react'
 
-function StudentSidebar() {
+function TeacherSidebar() {
     const pathName = window.location.pathname;
     return (
         <div>
@@ -8,19 +8,19 @@ function StudentSidebar() {
                 <div className="position-sticky pt-3">
                     <ul className="nav flex-column">
                         <li className="nav-item">
-                            <a className={pathName === "/account" ? "nav-link sidebar-active" : "nav-link"} aria-current="page" href="/account">
+                            <a className={pathName === "/account" || pathName.includes("teacher") ? "nav-link sidebar-active" : "nav-link"} aria-current="page" href="/account">
                                 <i className="fas fa-home"></i>
                                 الرئيسية
                             </a>
                         </li>
-                        <li className="nav-item">
-                            <a className={pathName === "" || pathName === "" ? "nav-link sidebar-active" : "nav-link"} href="/account/*">
-                                <i className="fas fa-book"></i>
-                                المواد
+                        {/* <li className="nav-item">
+                            <a className={pathName === "" || pathName === "" ? "nav-link sidebar-active" : "nav-link"} href="/teacher/*">
+                                <i className="fas fa-chalkboard"></i>
+                                الصفوف
                             </a>
-                        </li>
+                        </li> */}
                         <li className="nav-item">
-                            <a className={pathName === "" || pathName === "" ? "nav-link sidebar-active" : "nav-link"} href="/account/user-info">
+                            <a className={pathName === "/account/user-info" ? "nav-link sidebar-active" : "nav-link"} href="/account/user-info">
                                 <i className="fas fa-user"></i>
                                الملف الشخصي
                             </a>
@@ -42,4 +42,4 @@ function StudentSidebar() {
     )
 }
 
-export default StudentSidebar
+export default TeacherSidebar

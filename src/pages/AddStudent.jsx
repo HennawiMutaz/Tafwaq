@@ -131,10 +131,10 @@ function AddStudent() {
                             <h1 className="h2">إضافة طالب</h1>
                             <div className="btn-toolbar mb-2 mb-md-0">
                                 <div className="alert d-flex justify-content-end" role="alert">
-                                    <a className="btn btn-primary btn-lg" href="" onClick={handleAddStudent}>
+                                    <button className="button" href="" onClick={handleAddStudent}>
                                     <span className="mx-1"> حفظ </span>
                                     <div style={{display: isLoading ? null : "none"}} className="spinner-border spinner-border-sm" role="status"></div>
-                                    </a>
+                                    </button>
                                 </div>
                             </div>
                         </div>

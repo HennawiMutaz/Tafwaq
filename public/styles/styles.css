@@ -303,3 +303,37 @@ body {
 #sidebarMenu .nav-item:hover {
   background-color: #d4d6d8;
 }
+
+.button {
+  font-family: "Tajawal", sans-serif;
+  display: inline-block;
+  font-weight: bolder;
+  min-width: 150px;
+  margin: 20px auto;
+  background: #1EAE98;
+  color: #fefefe;
+  font-size: 1.2em;
+  padding: 1em;
+  border-radius: 4px;
+  text-align: center;
+  position: relative;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  border: 0;
+  transition: border-radius linear 0.05s, width linear 0.05s;
+  text-decoration: none;
+}
+
+.button:hover {
+  background-color: #1a9986 ;
+  color: #FFF;
+}
+
+.sidebar-active {
+  color: #1a9986 !important;
+}
+
+.icon-hover:hover {
+  color: #1a9986 !important;
+}

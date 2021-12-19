@@ -8,7 +8,7 @@ function LoginPage() {
   const emailRef = useRef();
   const passwordRef = useRef();
   const [isloading, setIsloading] = useState(true);
-
+  const [msg, setmsg] = useState("")
 
   async function handleLogin(e) {
     e.preventDefault();
@@ -16,8 +16,15 @@ function LoginPage() {
       await login(emailRef.current.value.trim(), passwordRef.current.value); 
       window.location.replace('/account');
     } catch (error) {
-      console.log(error.code);
       setIncorrect(true);
+      console.log(error.code);
+      if (error.code === "auth/wrong-password") {
+        setmsg("عنوان البريد الإلكتروني أو كلمة المرور خاطئين");
+      }
+      else if (error.code === "auth/too-many-requests") {
+        setmsg();
+        setmsg("حاول التسجيل لاحقاً");
+      }
     } 
   }
 
@@ -65,7 +72,7 @@ function LoginPage() {
           </div>
           <div style={incorrect ? { opacity:1, } : {opacity:0}} className="row align-items-center mt-4">
             <div className="alert alert-danger" role="alert">
-              عنوان البريد الإلكتروني أو كلمة المرور خاطئين
+              {msg}
             </div>
           </div>
         </div>

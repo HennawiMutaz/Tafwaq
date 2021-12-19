@@ -1,38 +1,38 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import Header from '../../components/Header'
 import StudentSidebar from '../../components/StudentSidebar'
+import $ from "jquery";
 
 function Paperwork() {
-
-    // var form = document.querySelector("form");
-    // form.addEventListener("change", function () {
-    //     this.document.querySelector(".file-upload-field").parent(".file-upload-wrapper").attr("data-text", this.val().replace(/.*(\/|\\)/, ''));
-    // });
-
-    // var animateButton = function (e) {
-
-    //     e.preventDefault;
-    //     e.target.classList.remove('animate');
-
-    //     e.target.classList.add('animate');
-
-    //     e.target.classList.add('animate');
-    //     setTimeout(function () {
-    //         e.target.classList.remove('animate');
-    //     }, 6000);
-    // };
-
-    // var classname = document.getElementsByClassName("button");
-
-    // for (var i = 0; i < classname.length; i++) {
-    //     classname[i].addEventListener('click', animateButton, false);
-    // }
-
-    // function submit() {
-    //     console.log("Q1: " + document.querySelector('input[name="Q1"]:checked').value);
-    //     console.log("Q2: " + document.querySelector('input[name="Q2"]:checked').value);
-    //     console.log("Q3: " + document.querySelector('input[name="Q3"]:checked').value);
-    // }
+      
+        useEffect(() => {
+        
+            $("form").on("change", ".file-upload-field", function(){ 
+                $(this).parent(".file-upload-wrapper").attr("data-text", $(this).val().replace(/.*(\/|\\)/, '') );
+              });
+              
+              var animateButton = function(e) {
+              
+                e.preventDefault();
+                e.target.classList.remove('animate');
+                
+                e.target.classList.add('animate');
+                
+                e.target.classList.add('animate');
+                setTimeout(function(){
+                  e.target.classList.remove('animate')
+                },6000)
+              }
+              
+              var classname = document.getElementsByClassName("button");
+              
+              for (var i = 0; i < classname.length; i++) {
+                classname[i].addEventListener('click', animateButton, false)
+              }
+            
+        }, [])
+        
+    
 
     return (
         <div className="dashboard">
@@ -74,7 +74,6 @@ function Paperwork() {
                     </main>
                 </div>
             </div>
-
         </div>
     )
 }

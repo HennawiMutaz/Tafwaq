@@ -16,6 +16,12 @@ import StudentActivity from '../pages/StudentPages/StudentActivity'
 import AllClasses from '../pages//StudentPages/AllClasses'
 import Paperwork from '../pages/StudentPages/Paperwork'
 import StudentQuiz from '../pages/StudentPages/StudentQuiz'
+import ChangePasswordPage from '../pages/ChangePasswordPage'
+import CreateTest from '../pages/TeacherPages/CreateTest'
+import AddMaterial from '../pages/TeacherPages/AddMaterial'
+import TeacherDashboard from '../pages/TeacherPages/TeacherDashboard'
+import UserInfo from '../pages/UserInfo'
+import TeacherAllClasses from '../pages/TeacherPages/TeacherAllClasses'
 
 
 
@@ -47,6 +53,17 @@ function AppRouter() {
                     <Route exact path='/student/paperwork' element={ <Paperwork /> } />
                     <Route exact path='/student/quiz' element={ <StudentQuiz /> } />
 
+                    <Route exact path='/teacher' element={ <TeacherDashboard /> } /> {/* صفوف */}
+                    <Route exact path='/teacher/add-material' element={ <AddMaterial /> } />
+                    <Route exact path='/teacher/create-test' element={ <CreateTest /> } />
+                    <Route exact path='/teacher/all-classes' element={ <TeacherAllClasses /> } /> {/* الحصص */}
+                    <Route exact path='/teacher/all-classes/class' element={ <TeacherAllClasses /> } /> {/* حصة وحدة */}
+
+
+
+                    <Route exact path='/account/user-info' element={ <UserInfo /> } />
+                    <Route exact path='/change-password' element={ <ChangePasswordPage /> } />
+                    
                     <Route  path="*" element={ <NotFoundPage/> } />
                 </Routes>
             </BrowserRouter> 

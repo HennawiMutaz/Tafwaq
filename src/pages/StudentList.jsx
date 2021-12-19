@@ -15,7 +15,7 @@ function StudentList() {
     function createTable(elem) {
         let keyVal = Math.random();
         return (
-            <TableEntry key={keyVal} user={elem} icon="fas fa-edit" counter={counter++} />
+            <TableEntry key={keyVal} user={elem} icon="fas fa-edit icon-hover" counter={counter++} />
         );
     }
 
@@ -55,7 +55,7 @@ function StudentList() {
                         <h1 className="h2">قائمة الطلاب</h1>
                         <div className="btn-toolbar mb-2 mb-md-0">
                             <div className="alert d-flex justify-content-end" role="alert">
-                                <a className="btn btn-primary btn-lg" href="/account/addstudent">
+                                <a className="button" href="/account/addstudent">
                                     <span> إضافة طالب </span>
                                     <i className="fas fa-user-plus" />
                                 </a>

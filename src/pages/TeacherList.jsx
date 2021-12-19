@@ -18,7 +18,7 @@ function TeacherList() {
             <TableEntry
              key={keyVal}
              user={elem} 
-             icon="fas fa-edit"
+             icon="fas fa-edit icon-hover"
              counter={counter++}    
              />
         );
@@ -58,7 +58,7 @@ function TeacherList() {
                         <h1 class="h2">قائمة المعلمين</h1>
                         <div class="btn-toolbar mb-2 mb-md-0">
                             <div className="alert d-flex justify-content-end" role="alert">
-                                <a className="btn btn-primary btn-lg" href="/account/addteacher">
+                                <a className="button" href="/account/addteacher">
                                     <span> إضافة معلم </span>
                                     <i className="fas fa-user-plus" />
                                 </a>
