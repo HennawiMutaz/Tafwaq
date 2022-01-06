@@ -24,6 +24,7 @@ function ChangePasswordPage() {
   const auth = getAuth();
   const user = auth.currentUser;
   const [isValid, setIsValid] = useState(false)
+  const [msg, setMsg] = useState("كلمة السر القديمة خاطئة")
 
   async function changePassword(e) {
     e.preventDefault();
@@ -41,8 +42,14 @@ function ChangePasswordPage() {
       if (newPassword.current.value === confirmPassword.current.value) { //TODO: ADD IF NEWPASS AND OLDPASS ARE SAME => ERROR
         updatePassword(user, newPassword.current.value).then(() => {
           // Update successful.
+          setMsg("تم تغيير كلمة السر بنجاح");
+          document.getElementById("success-wrapper").className = "valid";
           document.getElementById("success-wrapper").style.display = "block";
-         
+          // restart values
+          var msg = document.getElementById("confirm-msg");
+          msg.textContent = "كلمة السر لا تتطابق";
+          msg.classList.remove("valid");
+          msg.classList.add("invalid");
           console.log("success");
         }).catch((error) => {
           // An error ocurred
@@ -57,6 +64,9 @@ function ChangePasswordPage() {
 
     }).catch((error) => {
       //oldPassword is incorrect
+      document.getElementById("success-wrapper").className = "invalid";
+      document.getElementById("success-wrapper").style.display = "block";
+
       console.log(error);
     });
   }
@@ -261,7 +271,7 @@ function ChangePasswordPage() {
                     <p id='confirm-msg' className="invalid"> <b>كلمة السر لا تتطابق</b></p>
                   </div>
                   <div style={{display:"none"}} id="success-wrapper">
-                    <p id='success-msg' className="valid"> <b>تم تغيير كلمة السر بنجاح</b></p>
+                    <p id='success-msg' className=""> <b>{msg}</b></p>
                   </div>
                 </div>
 

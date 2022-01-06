@@ -34,18 +34,19 @@ function Modal(props) {
                         <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div className="modal-body">
+                       الرقم الوطني: {`${userInfo.nationalNumber}`} <br />
                         الإسم بالعربي: {`${userInfo.firstNameAr}  ${userInfo.midNameAr}  ${userInfo.lastNameAr}`} <br />
                         الإسم بالإنجليزي: {`${userInfo.firstNameEn}  ${userInfo.midNameEn}  ${userInfo.lastNameEn}`} <br />
                         البريد الإلكتروني: {userInfo.email} <br />
                         كلمة المرور: {userInfo.password} <br />
                         تاريخ الميلاد : {userInfo.birthdate} <br />
-                        {userInfo.type === "student" ? `الصف : ${levelMap[userInfo.level]}` : `التخصص : ${userInfo.subject}`}   <br />
+                        {userInfo.type === "student" ? `الصف : ${levelMap[userInfo.level]}` : `التخصص : ${userInfo.subjectAr}`}   <br />
                         الجنس : {genderMap[userInfo.gender]} <br />
 
                     </div>
                     <div className="modal-footer no-print">
                         <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">إغلاق</button>
-                        <button type="button" className="btn btn-primary" onClick={window.print}>طباعة</button>
+                        <button style={{backgroundColor: "#1a9986", color: "#FFF"}} type="button" className="btn" onClick={window.print}>طباعة</button>
                     </div>
                 </div>
             </div>

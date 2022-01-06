@@ -1,8 +1,14 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 
 function Card(props) {
     return (
-        <a href={props.href}>
+        <Link
+         to="/account/class" 
+         state={{
+                    lecture: props.lectures,
+                }}
+         >
             <div className="container mb-4">
                 <section className="cards">
                     <article className="card shadow p-3 mb-5 rounded border border-light border-5  ">
@@ -20,7 +26,7 @@ function Card(props) {
                     </article>
                 </section>
             </div>
-        </a>
+        </Link>
     )
 }
 

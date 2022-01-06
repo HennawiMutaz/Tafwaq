@@ -1,8 +1,23 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import Header from '../../components/Header'
 import StudentSidebar from '../../components/StudentSidebar'
+import { useLocation } from 'react-router'
+import { Link } from 'react-router-dom';
+
 
 function StudentActivity() {
+
+  const location = useLocation();
+  const { lecture } = location.state;
+//   useEffect(() => {
+
+      
+//       console.log(lecture.link);
+//       return () => {
+//       }
+//   }, [])
+
+
     return (
         <div className="dashboard">
             <Header />
@@ -16,25 +31,32 @@ function StudentActivity() {
                                 <article className="Sub-card">
                                     <div className="row">
                                         <div className="col-12 col-lg-12 col-md-12 col-sm-12 center">
-                                            <h1> الممنوع من الصرف</h1>
-                                            <h6>أ.إياد محمد</h6>
-                                            <p> الشرح الوافي لقاعدة الممنوع من الصرف</p>
-                                            <a href="/student/all-classes"><button className="btn btn-outline-primary  btn-lg">
-                                                اللغة العربية
-                                            </button></a>
+                                            <h1> {lecture?.title} </h1>
+                                            <h6>أ. {lecture.teacherNameAr}</h6>
+                                            <p> {lecture?.description}</p>
+                                            <Link
+                                            to="/account/all-classes"
+                                            state={{
+                                                lecture: lecture
+                                            }}
+                                            >
+                                                <button className="btn btn-outline-primary btn-lg">
+                                                    {lecture.subjectNameAr}
+                                                </button>
+                                            </Link>
                                         </div>
                                     </div>
                                 </article>
                             </section>
                         </div>
-                        <iframe className="center" width={560} height={315} src="https://www.youtube.com/embed/u2M3K4FN2IQ" frameBorder={0} allowFullScreen />
+                        <iframe className="center" width="420" height="315" src={lecture.link} frameBorder="0" allowFullScreen></iframe>
                         <div className="row">
                             <div className=" col-lg-7  col-md-12 col-sm-12">
-                                <a href><h5 className="attch">  <svg xmlns="http://www.w3.org/2000/svg" width={16} height={16} fill="currentColor" className="bi bi-eye-fill" viewBox="0 0 16 16">
+                                <a href=""><h5 className="attch">  <svg xmlns="http://www.w3.org/2000/svg" width={16} height={16} fill="currentColor" className="bi bi-eye-fill" viewBox="0 0 16 16">
                                     <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z" />
                                     <path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8zm8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z" />
                                 </svg>ما هو الممنوع من الصرف</h5></a>
-                                <a href><h5 className="attch"><svg xmlns="http://www.w3.org/2000/svg" width={16} height={16} fill="currentColor" className="bi bi-eye-fill" viewBox="0 0 16 16">
+                                <a href=""><h5 className="attch"><svg xmlns="http://www.w3.org/2000/svg" width={16} height={16} fill="currentColor" className="bi bi-eye-fill" viewBox="0 0 16 16">
                                     <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z" />
                                     <path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8zm8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z" />
                                 </svg> أسباب منع الصرف</h5></a>

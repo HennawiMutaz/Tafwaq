@@ -26,6 +26,24 @@ import { getAuth, createUserWithEmailAndPassword, signOut} from 'firebase/auth';
 function AddTeacher() {
 
     
+    const subjectMap = {
+        science: "علوم",
+        math: "رياضيات",
+        english: "اللغة انجليزية",
+        arabic: "اللغة العربية",
+        chemistry: "الكيمياء",
+        physics: "الفيزياء",
+        history: "تاريخ",
+        geography: "جغرافيا",
+        patriotism: "وطنية",
+        geology: "علوم الأرض",
+        biology: "العلوم الحياتية",
+        history_of_jordan: "تاريخ الأردن",
+        computer_science: "علوم الحاسوب",
+        islamics: "علوم إسلامية",
+    }
+
+    
     let config = {
         apiKey: "AIzaSyAZU9mr36OLEC5rM-5WcWcGKueAFu5fTb4",
         authDomain: "tfwaq-36acd.firebaseapp.com",
@@ -46,6 +64,7 @@ function AddTeacher() {
     const firstNameEn = useRef();
     const midNameEn = useRef();
     const lastNameEn = useRef();
+    const nationalNumber = useRef();
     //Modal
     const [modalMessage, setModalMessage] = useState("");
     const [isLoading, setIsLoading] = useState(false);
@@ -53,17 +72,25 @@ function AddTeacher() {
 
     function handleAddTeacher(e) {
         e.preventDefault();
-        setIsLoading(true);
-        // console.log(firstName.current.value);
-        // console.log(midName.current.value);
-        // console.log(lastName.current.value);
-        // console.log(firstNameEn.current.value);
-        // console.log(midNameEn.current.value);
-        // console.log(lastNameEn.current.value);
-        // console.log(birthdate.current.value);
-        // console.log(subject.current.value);
-        // console.log(gender.current.value); 
+        const isEmpty = str => !str.trim().length;
+        let flag = false;
+        const inputs = document.querySelectorAll('input[type="text"]');
+        var inputList = Array.prototype.slice.call(inputs);
+        inputList.shift();
+        inputList.forEach(elem => {
+            if(isEmpty(elem.value)) {flag = true; console.log(elem);}
+        });
+        console.log(flag);
+        console.log(gender.current.value )
+        console.log( !birthdate.current.value )  //if empty => output: true
+        console.log(subject.current.value);
         
+        if (flag || gender.current.value === "true" || !birthdate.current.value || subject.current.value === "true") {
+            alert("الرجاء إدخال المعلومات بشكل صحيح");
+        }
+        else {
+        setIsLoading(true);
+
         // 
 
         const email = firstNameEn.current.value.trim().toLowerCase().slice(0,2) + midNameEn.current.value.trim().toLowerCase().slice(0,2) + lastNameEn.current.value.trim().toLowerCase() + birthdate.current.value.slice(0,4) + "@tafwaq.edu.jo";
@@ -71,7 +98,7 @@ function AddTeacher() {
         console.log(email);
 
         let chars = "0123456789abcdefghijklmnopqrstuvwxyz!@#$%^&*()ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-        let passwordLength = 12;
+        let passwordLength = 8;
         let password = "";
 
         for (let i = 0; i <= passwordLength; i++) {
@@ -96,6 +123,7 @@ function AddTeacher() {
                     //
                     birthdate: birthdate.current.value,
                     subject: subject.current.value,
+                    subjectAr: subjectMap[subject.current.value],
                     gender: gender.current.value,
                     email: email,
                     classroomsIDs: [],
@@ -103,6 +131,7 @@ function AddTeacher() {
                     //
                     type: "teacher",
                     createdAt: serverTimestamp(),
+                    nationalNumber: nationalNumber.current.value.trim(),
                 };
                 await setDoc(doc(db, "users", user.uid), newUser);
 
@@ -122,6 +151,7 @@ function AddTeacher() {
         });
         
         signOut(auth);
+    }
     }
 
 
@@ -167,6 +197,10 @@ function AddTeacher() {
                                         <label className="label" htmlFor="lastName">اسم العائلة</label> <br />
                                         <input autoComplete="off" ref={lastName} id="lastName" className="input-text js-input" type="text" required />
                                     </div>
+                                    <div className="form-field col-lg-3 ">
+                                        <label className="label" htmlFor="lastName">الرقم الوطني </label> <br />
+                                        <input autoComplete="off" ref={nationalNumber} id="nationalNumber" className="input-text js-input" type="text" required />
+                                    </div>
                                    
                                     </div>
                                     {/* ENGLISH NAME */}
@@ -195,20 +229,20 @@ function AddTeacher() {
                                             <label className="label">المادة</label>
                                             <select ref={subject} dir="rtl" className="form-control form-select" required>
                                                 <option value selected> </option>
-                                                <option value="علوم" >علوم</option>
-                                                <option value="رياضيات">رياضيات</option>
-                                                <option value="اللغة انجليزية">اللغة انجليزية</option>
-                                                <option value="اللغة العربية">اللغة العربية</option>
-                                                <option value="الكيمياء">الكيمياء</option>
-                                                <option value="الفيزياء">الفيزياء</option>
-                                                <option value="تاريخ">تاريخ</option>
-                                                <option value="جغرافيا">جغرافيا</option>
-                                                <option value="وطنية">وطنية</option>
-                                                <option value="علوم الأرض">علوم الأرض</option>
-                                                <option value="العلوم الحياتية">العلوم الحياتية </option>
-                                                <option value="تاريخ الأردن">تاريخ الأردن</option>
-                                                <option value="علوم الحاسوب">علوم الحاسوب  </option>
-                                                <option value="علوم إسلامية">علوم إسلامية  </option>
+                                                <option value="science" >علوم</option>
+                                                <option value="math">رياضيات</option>
+                                                <option value="english">اللغة الانجليزية</option>
+                                                <option value="arabic">اللغة العربية</option>
+                                                <option value="chemistry">الكيمياء</option>
+                                                <option value="physics">الفيزياء</option>
+                                                <option value="history">تاريخ</option>
+                                                <option value="geography">جغرافيا</option>
+                                                <option value="patriotism">وطنية</option>
+                                                <option value="geology">علوم الأرض</option>
+                                                <option value="biology">العلوم الحياتية </option>
+                                                <option value="history_of_jordan">تاريخ الأردن</option>
+                                                <option value="computer_science">علوم الحاسوب  </option>
+                                                <option value="islamics">علوم إسلامية  </option>
                                             </select>
                                         </div>
                                         <div className=" col-lg-3">

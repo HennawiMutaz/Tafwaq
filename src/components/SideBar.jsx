@@ -32,6 +32,12 @@ function SideBar() {
               </a>
             </li>
             <li className="nav-item">
+              <a className={pathName === "/account/user-info" ? "nav-link sidebar-active" : "nav-link"} href="/account/user-info">
+                <i className="fas fa-user"></i>
+                الملف الشخصي
+              </a>
+            </li>
+            <li className="nav-item">
               <a className={pathName === "/change-password" ? "nav-link sidebar-active" : "nav-link"} href="/change-password">
                 <i className="fas fa-key"></i>
                 تغيير كلمة السر
@@ -39,7 +45,7 @@ function SideBar() {
             </li>
           </ul>
 
-   
+
         </div>
       </nav>
 

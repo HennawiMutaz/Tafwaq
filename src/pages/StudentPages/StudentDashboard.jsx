@@ -1,9 +1,41 @@
-import React from 'react'
+import React, {useEffect, useState} from 'react'
 import Card from '../../components/Card'
 import Header from '../../components/Header'
 import StudentSidebar from '../../components/StudentSidebar'
+import {
+    collection,
+    updateDoc,
+    doc,
+    serverTimestamp,
+    query,
+    where,
+    setDoc,
+    getDocs,
+    orderBy,
+} from 'firebase/firestore';
+import { db } from '../../fbConfig';
+
 
 function StudentDashboard(props) {
+
+    const [lectures, setLecture] = useState([]);
+    let list = [];
+
+    useEffect( async () => {
+        
+        const q = query(collection(db, "lectures"), where("classroomID", "==", props?.info?.classroomID), orderBy("createdAt", "desc"));
+        const lectureSnapshot = await getDocs(q);
+        lectureSnapshot.forEach((doc) => {
+            console.log(doc.id, " => ", doc.data());
+            list.push(doc.data());
+            setLecture(list);
+        });
+        console.log(list);
+
+        return () => {
+            
+        }
+    }, [])
 
     return (
         <div className="dashboard">
@@ -25,9 +57,11 @@ function StudentDashboard(props) {
                     <main className="col-md-9 ms-sm-auto col-lg-10 px-md-4">
                         <div>
                             {/* <div class="container-fluid"> */}
-                            <Card href="student/class" src="images/english.png" des="الاستخدامات, القاعدة, أمثلة" subjectName="اللغة الإنجليزية" topic="المضارع المستمر" date="٢٠٢١/٢/٢٣" />
-                            <Card href="student/class" src="images/math.png" des="الكسور , توحيد البسط والمقام ,أمثلة" subjectName="الرياضيات" topic="طرح الكسور والأعداد الكسرية " date="٢٠٢١/٢/٢٣" />
-                            <Card href="student/class" src="images/chemistry.png" des="تحليل المركبات ,التأكسد والأختزال ,أمثلة" subjectName="الكيمياء" topic="المركبات العضوية " date="٢٠٢١/٢/٢٣" />
+                            {lectures.map((elem, index) => {
+                                        return (
+                                        <Card key={elem || index} lectures={elem} src={`images/${elem.subjectName}.png`} des={elem.description} subjectName={elem.subjectNameAr} topic={elem.title} date={elem.createdAt.toDate().toLocaleDateString('ar-EG')} />    
+                                        );
+                                    })}
                            
                             <div className="container">
                                 <section className="cards">

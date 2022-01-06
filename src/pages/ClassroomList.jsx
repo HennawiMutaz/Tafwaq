@@ -11,14 +11,35 @@ function ClassroomList() {
     const [list, setList] = useState([])
     let temp = [];
     let counter = 1;
+    let members = 0;
     function createTable(elem) {
         return (
             <tr>
                 <th scope="row">{counter++}</th>
                 <td>{elem.name}</td>
+                <td className='text-center'>{elem.members}</td>
                 <td> <i className="fas fa-edit icon-hover"></i> </td>
             </tr>
         );
+    }
+
+    async function countMembers(elem) {
+        try {
+            const q = query(collection(db, "users"), where("classroomID", "==", elem?.id));
+            
+            const querySnapshot = await getDocs(q);
+            querySnapshot.forEach((doc) => {
+                // console.log(doc.id, " => ", doc.data());
+                console.log(elem.name,elem.id,"___",doc.data().classroomID);
+                members++;
+            }); 
+        } catch (error) {
+            console.log(error);
+        } finally {
+            elem.members = members;
+            console.log("members=",members);
+            members = 0;
+        }   
     }
 
     useEffect(() => {
@@ -28,15 +49,16 @@ function ClassroomList() {
 
                 const querySnapshot = await getDocs(q);
                 querySnapshot.forEach((doc) => {
-                    console.log(doc.id, " => ", doc.data());
+                    // console.log(doc.id, " => ", doc.data());
                     temp.push(doc.data());
                 });
             } catch (error) {
                 console.log(error);
             } finally {
                 setList(temp);
+                temp.map(elem => countMembers(elem));
             }
-
+            
         }
         return getClassrooms();
     }, [])
@@ -74,9 +96,10 @@ function ClassroomList() {
                                 <table className="table table-striped table-hover table-bordered">
                                     <thead style={{ display: list.length ? null : "none" }}>
                                         <tr>
-                                            <th scope="col">#</th>
-                                            <th scope="col">اسم الصف</th>
-                                            <th scope="col"></th>
+                                            <th style={{width:"50px"}} scope="col">#</th>
+                                            <th style={{width:"400px"}} scope="col">اسم الصف</th>
+                                            <th style={{width:"200px"}} className='text-center' scope="col">عدد الطلاب</th>
+                                            <th style={{width:"50px"}} scope="col"></th>
                                         </tr>
                                     </thead>
                                     <div style={{ display: !list.length ? null : "none" }} className="p-5 spinner-border spinner-border-lg" role="status"></div>

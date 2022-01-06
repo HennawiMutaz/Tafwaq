@@ -1,29 +1,26 @@
-import React, { useRef, useState } from 'react'
+import React, { useRef, useState, useEffect } from 'react'
 import Header from '../components/Header';
 import SideBar from '../components/SideBar';
 import TableEntry from '../components/TableEntry';
 import ModalInfo from '../components/ModalInfo';
 import {
     collection,
-    addDoc,
     updateDoc,
     doc,
-    deleteDoc,
-    onSnapshot,
     serverTimestamp,
     query,
-    orderBy,
     where,
     setDoc,
     getDocs,
     arrayUnion,
-    arrayRemove,
 } from 'firebase/firestore';
 import { db } from '../fbConfig';
 
 
 
 function AddClassroom() {
+
+
 
     const levelMap = {
         1: "الأول",
@@ -48,25 +45,6 @@ function AddClassroom() {
         5: "هـ",
     }
 
-    // const btns = document.getElementsByClassName("fas fa-user-plus");
-   
-    // for(let i = 0; i < btns.length; i++) {
-    //     btns[i].addEventListener('click', () => {
-        
-    //         if (btns[i].classList.contains("fa-user-plus")) {
-    //             btns[i].classList.add("fa-user-minus");
-    //             btns[i].classList.remove("fa-user-plus");
-    //         } else {
-    //             btns[i].classList.remove("fa-user-minus");
-    //             btns[i].classList.add("fa-user-plus");
-    //         }
-    //     })
-    // }
-    
-
-
-
-
     async function updateStudentClassroom(uid) {
         const Ref = doc(db, "users", uid);
 
@@ -81,28 +59,21 @@ function AddClassroom() {
 
             await updateDoc(Ref, {
                 classroomsIDs: arrayUnion(id)
-            });    
+            });
         } catch (error) {
             console.log(error);
         }
-        
+
     }
 
 
     let stdCounter = 1, tCounter = 1;
-    function createTable(elem) {
-        let keyVal = Math.random();
-        return (
-            <TableEntry teafun={updateTeacherClassroom} stdfun={updateStudentClassroom} key={keyVal} user={elem} icon="fas fa-user-plus icon-hover" counter={elem.type === "student" ? stdCounter++ : tCounter++} />
-        );
-    }
+
 
     const [classroomName, setClassroomName] = useState("")
     const level = useRef();
     const sectionNumber = useRef();
     const classroomRef = doc(collection(db, 'classrooms'));
-    const mathRef = doc(collection(db, 'subjects'));
-    const englishRef = doc(collection(db, 'subjects'));
     const [modalMessage, setModalMessage] = useState("");
     let temp = [];
     let temp2 = [];
@@ -113,6 +84,30 @@ function AddClassroom() {
     const [completed, setIsCompleted] = useState(false);
     const [id, setId] = useState("")
     const [saved, setSaved] = useState(false);
+
+
+
+    useEffect(() => {
+        function fun() {
+            console.log("useEffect");
+            const icons = document.querySelectorAll(".fa-user-plus");
+            for (let i = 0; i < icons.length; i++) {
+                const el = icons[i];
+                el.addEventListener('click', function() {
+                   if (el.classList.contains("fa-user-plus")) {
+                      el.classList.replace("fa-user-plus","fa-user-minus");
+                   } else {
+                       el.classList.replace("fa-user-minus","fa-user-plus");
+                   }
+                })
+            }
+        }
+           
+        return fun;
+    }, [saved])
+
+
+
 
     async function handleAddClassroom(e) {
         e.preventDefault();
@@ -134,33 +129,68 @@ function AddClassroom() {
             createdAt: serverTimestamp(),
             id: "",
         };
-        const math = {
+        
+    const listOfSubjects = [
+        {
             name: "math",
             level: level.current.value,
             className: `${levelMap[level?.current?.value]}  (${sectionNumberMap[sectionNumber?.current?.value]})`,
             createdAt: serverTimestamp(),
             id: "",
             classroomID: "",
-        }
-        const english = {
+            nameAr: "الرياضيات",
+        },{
             name: "english",
             level: level.current.value,
             className: `${levelMap[level?.current?.value]}  (${sectionNumberMap[sectionNumber?.current?.value]})`,
             createdAt: serverTimestamp(),
             id: "",
             classroomID: "",
+            nameAr: "اللغة الإنجليزية",
+        },{
+            name: "science",
+            level: level.current.value,
+            className: `${levelMap[level?.current?.value]}  (${sectionNumberMap[sectionNumber?.current?.value]})`,
+            createdAt: serverTimestamp(),
+            id: "",
+            classroomID: "",
+            nameAr: "علوم",
         }
-        math.classroomID = classroomRef.id;
-        english.classroomID = classroomRef.id;
-        math.id = mathRef.id;
-        english.id = englishRef.id;
+        ,{
+            name: "arabic",
+            level: level.current.value,
+            className: `${levelMap[level?.current?.value]}  (${sectionNumberMap[sectionNumber?.current?.value]})`,
+            createdAt: serverTimestamp(),
+            id: "",
+            classroomID: "",
+            nameAr: "اللغة العربية",
+        }
+        ,{
+            name: "religion",
+            level: level.current.value,
+            className: `${levelMap[level?.current?.value]}  (${sectionNumberMap[sectionNumber?.current?.value]})`,
+            createdAt: serverTimestamp(),
+            id: "",
+            classroomID: "",
+            nameAr: "علوم إسلامية" ,
+        }
+      ]
+
+ 
+        listOfSubjects.forEach(async (obj) => {
+            var docRef = doc(collection(db, 'subjects')); //automatically generate unique id
+            obj.classroomID = classroomRef.id;
+            obj.id = docRef.id;
+           await setDoc(docRef, obj);
+          });
+
 
         newClassroom.id = classroomRef.id;
         setIsLoading(true);
         setId(newClassroom.id);
         await setDoc(classroomRef, newClassroom);
-        await setDoc(mathRef, math);
-        await setDoc(englishRef, english);
+        // await setDoc(mathRef, math);
+        // await setDoc(englishRef, english);
         setIsLoading(false);
         setIsCompleted(true);
 
@@ -204,8 +234,8 @@ function AddClassroom() {
                         <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
                             <h1 className="h2"> {completed ? "إضافة الطلاب و المعلمين للصف" : "إضافة صف"} </h1>
                             <div className="btn-toolbar mb-2 mb-md-0">
-                                <div  className="alert d-flex justify-content-end" role="alert">
-                                    <button style={{display: saved ? "none" : null }} className="button" onClick={handleAddClassroom}>
+                                <div className="alert d-flex justify-content-end" role="alert">
+                                    <button style={{ display: saved ? "none" : null }} className="button" onClick={handleAddClassroom}>
                                         <span className="mx-1"> حفظ </span>
                                         <div style={{ display: isLoading ? null : "none" }} className="spinner-border spinner-border-sm" role="status"></div>
                                     </button>
@@ -276,7 +306,18 @@ function AddClassroom() {
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                {teachers.map(createTable)}
+                                                {teachers.map((elem, index) => {
+                                                    return (
+                                                        <TableEntry teafun={updateTeacherClassroom}
+                                                            stdfun={updateStudentClassroom}
+                                                            key={elem.id || index}
+                                                            user={elem}
+                                                            icon="fas fa-user-plus icon-hover"
+                                                            counter={elem.type === "student" ? stdCounter++ : tCounter++}
+
+                                                        />
+                                                    );
+                                                })}
                                             </tbody>
                                         </table>
                                     </div>
@@ -295,7 +336,18 @@ function AddClassroom() {
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                {list.map(createTable)}
+                                                {list.map((elem, index) => {
+                                                    return (
+                                                        <TableEntry teafun={updateTeacherClassroom}
+                                                            stdfun={updateStudentClassroom}
+                                                            key={elem.id || index}
+                                                            user={elem}
+                                                            icon="fas fa-user-plus icon-hover"
+                                                            counter={elem.type === "student" ? stdCounter++ : tCounter++}
+
+                                                        />
+                                                    );
+                                                })}
                                             </tbody>
                                         </table>
                                     </div>

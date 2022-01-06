@@ -22,6 +22,9 @@ import AddMaterial from '../pages/TeacherPages/AddMaterial'
 import TeacherDashboard from '../pages/TeacherPages/TeacherDashboard'
 import UserInfo from '../pages/UserInfo'
 import TeacherAllClasses from '../pages/TeacherPages/TeacherAllClasses'
+import ProfilePage from '../pages/ProfilePage'
+import ListOfStudents from '../pages/TeacherPages/ListOfStudents'
+import ListOfStudentGrades from '../pages/TeacherPages/ListOfStudentGrades'
 
 
 
@@ -48,20 +51,22 @@ function AppRouter() {
                     <Route exact path='/account/addclassroom' element={ <AddClassroom /> } />
 
                     <Route exact path='/student' element={ <StudentDashboard /> } />
-                    <Route exact path='/student/class' element={ <StudentActivity /> } />
-                    <Route exact path='/student/all-classes' element={ <AllClasses /> } />
+                    <Route exact path='/account/class' element={ <StudentActivity /> } />
+                    <Route exact path='/account/all-classes' element={ <AllClasses /> } />
                     <Route exact path='/student/paperwork' element={ <Paperwork /> } />
                     <Route exact path='/student/quiz' element={ <StudentQuiz /> } />
 
                     <Route exact path='/teacher' element={ <TeacherDashboard /> } /> {/* صفوف */}
                     <Route exact path='/teacher/add-material' element={ <AddMaterial /> } />
                     <Route exact path='/teacher/create-test' element={ <CreateTest /> } />
+                    <Route exact path='/teacher/student-list' element={ <ListOfStudents /> } />
+                    <Route exact path='/teacher/student-gradelist' element={ <ListOfStudentGrades /> } />
                     <Route exact path='/teacher/all-classes' element={ <TeacherAllClasses /> } /> {/* الحصص */}
                     <Route exact path='/teacher/all-classes/class' element={ <TeacherAllClasses /> } /> {/* حصة وحدة */}
 
 
 
-                    <Route exact path='/account/user-info' element={ <UserInfo /> } />
+                    <Route exact path='/account/user-info' element={ <ProfilePage /> } />
                     <Route exact path='/change-password' element={ <ChangePasswordPage /> } />
                     
                     <Route  path="*" element={ <NotFoundPage/> } />
