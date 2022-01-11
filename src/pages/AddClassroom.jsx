@@ -13,6 +13,7 @@ import {
     setDoc,
     getDocs,
     arrayUnion,
+    arrayRemove,
 } from 'firebase/firestore';
 import { db } from '../fbConfig';
 
@@ -45,26 +46,7 @@ function AddClassroom() {
         5: "هـ",
     }
 
-    async function updateStudentClassroom(uid) {
-        const Ref = doc(db, "users", uid);
-
-        await updateDoc(Ref, {
-            classroomID: id
-        });
-    }
-
-    async function updateTeacherClassroom(uid) {
-        try {
-            const Ref = doc(db, "users", uid);
-
-            await updateDoc(Ref, {
-                classroomsIDs: arrayUnion(id)
-            });
-        } catch (error) {
-            console.log(error);
-        }
-
-    }
+   
 
 
     let stdCounter = 1, tCounter = 1;
@@ -84,7 +66,59 @@ function AddClassroom() {
     const [completed, setIsCompleted] = useState(false);
     const [id, setId] = useState("")
     const [saved, setSaved] = useState(false);
+    const [updated, setUpdated] = useState("");
 
+
+
+
+    async function updateStudentClassroom(uid) {
+        const Ref = doc(db, "users", uid);
+
+        await updateDoc(Ref, {
+            classroomID: id
+        });
+        setUpdated(id);
+
+    }
+
+    async function updateTeacherClassroom(uid) {
+        try {
+            const Ref = doc(db, "users", uid);
+
+            await updateDoc(Ref, {
+                classroomsIDs: arrayUnion(id)
+            });
+        } catch (error) {
+            console.log(error);
+        }
+        setUpdated(id);
+
+    }
+
+
+    async function removeStudentClassroom(uid) {
+        const Ref = doc(db, "users", uid);
+
+        await updateDoc(Ref, {
+            classroomID: ""
+        });
+        setUpdated(null);
+        
+    }
+
+    async function removeTeacherClassroom(uid) {
+        try {
+            const Ref = doc(db, "users", uid);
+
+            await updateDoc(Ref, {
+                classroomsIDs: arrayRemove(id)
+            });
+        } catch (error) {
+            console.log(error);
+        }
+        setUpdated(null);
+
+    }
 
 
     useEffect(() => {
@@ -105,6 +139,32 @@ function AddClassroom() {
            
         return fun;
     }, [saved])
+
+    useEffect(async () => {
+       
+        try {
+            const q = query(collection(db, "users"), where("type", "==", "student"), where("level", "==", id));
+            const teachersQuery = query(collection(db, "users"), where("type", "==", "teacher"));
+            const teacherSnapshot = await getDocs(teachersQuery);
+            teacherSnapshot.forEach((doc) => {
+                console.log(doc.id, " => ", doc.data());
+                temp2.push(doc.data());
+            });
+            const querySnapshot = await getDocs(q);
+            querySnapshot.forEach((doc) => {
+                console.log(doc.id, " => ", doc.data());
+                temp.push(doc.data());
+            });
+        } catch (error) {
+            console.log(error);
+        } finally {
+            setTeachers(temp2);
+            setList(temp);
+            console.log("saved");
+        }
+
+       return ()=>{}
+    }, [updated])
 
 
 
@@ -189,8 +249,6 @@ function AddClassroom() {
         setIsLoading(true);
         setId(newClassroom.id);
         await setDoc(classroomRef, newClassroom);
-        // await setDoc(mathRef, math);
-        // await setDoc(englishRef, english);
         setIsLoading(false);
         setIsCompleted(true);
 
@@ -308,14 +366,16 @@ function AddClassroom() {
                                             <tbody>
                                                 {teachers.map((elem, index) => {
                                                     return (
-                                                        <TableEntry teafun={updateTeacherClassroom}
-                                                            stdfun={updateStudentClassroom}
+                                                        <TableEntry 
+                                                            teafun={updateTeacherClassroom}
+                                                            removeFun = {removeTeacherClassroom}
                                                             key={elem.id || index}
                                                             user={elem}
-                                                            icon="fas fa-user-plus icon-hover"
+                                                            icon="fas fa-user-plus icon-hover" 
                                                             counter={elem.type === "student" ? stdCounter++ : tCounter++}
-
-                                                        />
+                                                            iconClass={elem.classroomsIDs.includes(id) ? "fas fa-user-minus icon-hover" : "fas fa-user-plus icon-hover"}                                                        
+                                                            classroomID={id}
+                                                            />
                                                     );
                                                 })}
                                             </tbody>
@@ -338,14 +398,16 @@ function AddClassroom() {
                                             <tbody>
                                                 {list.map((elem, index) => {
                                                     return (
-                                                        <TableEntry teafun={updateTeacherClassroom}
+                                                        <TableEntry 
                                                             stdfun={updateStudentClassroom}
+                                                            removeFun = {removeStudentClassroom}
                                                             key={elem.id || index}
                                                             user={elem}
                                                             icon="fas fa-user-plus icon-hover"
                                                             counter={elem.type === "student" ? stdCounter++ : tCounter++}
-
-                                                        />
+                                                            iconClass={elem.classroomID == id ? "fas fa-user-minus icon-hover" : "fas fa-user-plus icon-hover"}                                                        
+                                                            classroomID={id}
+                                                            />
                                                     );
                                                 })}
                                             </tbody>

@@ -8,25 +8,25 @@ function SideBar() {
         <div className="position-sticky pt-3">
           <ul className="nav flex-column">
             <li className="nav-item">
-              <a className={pathName === "/account" ? "nav-link sidebar-active" : "nav-link"} aria-current="page" href="/account">
+              <a className={pathName === "/account" || pathName.includes("edit-user") ? "nav-link sidebar-active" : "nav-link"} aria-current="page" href="/account">
                 <i className="fas fa-home"></i>
                 الرئيسية
               </a>
             </li>
             <li className="nav-item">
-              <a className={pathName === "/account/studentlist" || pathName === "/account/addstudent" ? "nav-link sidebar-active" : "nav-link"} href="/account/studentlist">
+              <a className={pathName === "/account/studentlist" || pathName === "/account/addstudent"  ? "nav-link sidebar-active" : "nav-link"} href="/account/studentlist">
                 <i className="fas fa-user-friends"></i>
                 قائمة الطلاب
               </a>
             </li>
             <li className="nav-item">
-              <a className={pathName === "/account/teacherlist" || pathName === "/account/addteacher" ? "nav-link sidebar-active" : "nav-link"} href="/account/teacherlist">
+              <a className={pathName === "/account/teacherlist" || pathName === "/account/addteacher"  ? "nav-link sidebar-active" : "nav-link"} href="/account/teacherlist">
                 <i className="fas fa-chalkboard-teacher"></i>
                 قائمة المعلمين
               </a>
             </li>
             <li className="nav-item">
-              <a className={pathName === "/account/classroomlist" || pathName === "/account/addclassroom" ? "nav-link sidebar-active" : "nav-link"} href="/account/classroomlist">
+              <a className={pathName === "/account/classroomlist" || pathName === "/account/addclassroom" || pathName.includes("edit-classroom") ? "nav-link sidebar-active" : "nav-link"} href="/account/classroomlist">
                 <i className="fas fa-chalkboard"></i>
                 الصفوف
               </a>

@@ -1,8 +1,7 @@
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import Header from '../components/Header';
 import SideBar from '../components/SideBar';
-import Modal from '../components/Modal';
-import { signup } from '../fbConfig';
+import { useLocation } from 'react-router';
 import {
     collection,
     addDoc,
@@ -16,26 +15,26 @@ import {
     setDoc,
 } from 'firebase/firestore';
 import { db } from '../fbConfig';
-import { initializeApp } from "firebase/app";
-import { getFirestore } from "@firebase/firestore";
-import { getAuth, createUserWithEmailAndPassword, onAuthStateChanged, signOut, signInWithEmailAndPassword } from 'firebase/auth';
+function EditPage() {
+    const subjectMap = {
+        science: "علوم",
+        math: "رياضيات",
+        english: "اللغة انجليزية",
+        arabic: "اللغة العربية",
+        chemistry: "الكيمياء",
+        physics: "الفيزياء",
+        history: "تاريخ",
+        geography: "جغرافيا",
+        patriotism: "وطنية",
+        geology: "علوم الأرض",
+        biology: "العلوم الحياتية",
+        history_of_jordan: "تاريخ الأردن",
+        computer_science: "علوم الحاسوب",
+        islamics: "علوم إسلامية",
+    }
 
-
-
-
-function AddStudent() {
-
-
-    let config = {
-        apiKey: "AIzaSyAZU9mr36OLEC5rM-5WcWcGKueAFu5fTb4",
-        authDomain: "tfwaq-36acd.firebaseapp.com",
-        projectId: "tfwaq-36acd",
-        storageBucket: "tfwaq-36acd.appspot.com",
-        messagingSenderId: "353022946163",
-        appId: "1:353022946163:web:509cb82e1c8b2fa21b7306"
-    };
-    let secondaryApp = initializeApp(config, "Secondary");
-    const auth = getAuth(secondaryApp);
+    const location = useLocation();
+    const { user } = location.state;
 
     const lastName = useRef();
     const midName = useRef();
@@ -47,14 +46,37 @@ function AddStudent() {
     const midNameEn = useRef();
     const lastNameEn = useRef();
     const nationalNumber = useRef();
+    const subject = useRef();
 
-    //Modal
-    const [modalMessage, setModalMessage] = useState("");
+    useEffect(() => {
+        
+        firstName.current.value = user.firstNameAr;
+        midName.current.value = user.midNameAr;
+        lastName.current.value = user.lastNameAr;
+        firstNameEn.current.value = user.firstNameEn
+        midNameEn.current.value = user.midNameEn;
+        lastNameEn.current.value = user.lastNameEn;
+        birthdate.current.value = user.birthdate;
+        nationalNumber.current.value = user.nationalNumber;
+        gender.current.value = user.gender;
+        if (user.type === "teacher") 
+        subject.current.value = user.subject;
+        else
+        level.current.value = user.level;
+
+
+        return () => {
+            
+        }
+    }, [])
+
+
     const [isLoading, setIsLoading] = useState(false);
 
 
-    function handleAddStudent(e) {
+    function handleEditUser(e) {
         e.preventDefault();
+        //* Validation
         const isEmpty = str => !str.trim().length;
         let flag = false;
         const inputs = document.querySelectorAll('input[type="text"]');
@@ -69,83 +91,62 @@ function AddStudent() {
         console.log(level.current.value);
         
         
-        if (flag || gender.current.value === "true" || !birthdate.current.value || level.current.value === "true") {
+        if (flag || gender.current.value === "true" || !birthdate.current.value) {
             alert("الرجاء إدخال المعلومات بشكل صحيح");
-        }      
+        }
+        else if (flag || (user.type === "student" && level.current.value === "true")) {
+            
+        }
         else if (nationalNumber.current.value.length !== 10 || !nationalNumber.current.value.match(/^[0-9]+$/)) {
             alert("الرقم الوطني يجب ان يتكون من 10 أرقام");
         }
+
+        //* If info is valid
         else {
-            setIsLoading(true);
-
-            // 
-
-            const email = firstNameEn.current.value.trim().toLowerCase().slice(0, 2) + midNameEn.current.value.trim().toLowerCase().slice(0, 2) + lastNameEn.current.value.trim().toLowerCase() + birthdate.current.value.slice(0, 4) + "@tafwaq.edu.jo";
-            console.log(email);
-
-            let chars = "0123456789abcdefghijklmnopqrstuvwxyz!@#$%^&*()ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-            let passwordLength = 8;
-            let password = "";
-
-            for (let i = 0; i <= passwordLength; i++) {
-                let randomNumber = Math.floor(Math.random() * chars.length);
-                password += chars.substring(randomNumber, randomNumber + 1);
+            let updatedData = {
+                firstNameAr: firstName.current.value.trim(),
+                midNameAr: midName.current.value.trim(),
+                lastNameAr: lastName.current.value.trim(),
+                //
+                firstNameEn: firstNameEn.current.value.trim(),
+                midNameEn: midNameEn.current.value.trim(),
+                lastNameEn: lastNameEn.current.value.trim(),
+                //
+                birthdate: birthdate.current.value,
+                gender: gender.current.value,
+                email: user.email,
+                uid: user.uid,
+                //
+                type: user.type,
+                createdAt: user.createdAt,
+                lastUpdated: serverTimestamp(),
+                nationalNumber: nationalNumber.current.value.trim(), 
+            };
+            if (user.type === "teacher") { 
+                updatedData.subject = subject.current.value;
+                updatedData.subjectAr = subjectMap[subject.current.value];
+                updatedData.classroomsIDs = user.classroomsIDs;
             }
+            else {
+                updatedData.level = level.current.value;
+            }
+            setIsLoading(true);
+            updateDoc(doc(db, "users", user.uid), updatedData)
+            .then( () => {
+                setIsLoading(false)
+                alert("تم تعديل المعلومات بنجاح");
+            })
 
-            console.log(password);
-
-            createUserWithEmailAndPassword(auth, email, password).then(async (result) => {
-                const user = result.user;
-
-                if (user) {
-                    let newUser = {
-                        firstNameAr: firstName.current.value.trim(),
-                        midNameAr: midName.current.value.trim(),
-                        lastNameAr: lastName.current.value.trim(),
-                        //
-                        firstNameEn: firstNameEn.current.value.trim(),
-                        midNameEn: midNameEn.current.value.trim(),
-                        lastNameEn: lastNameEn.current.value.trim(),
-                        //
-                        birthdate: birthdate.current.value,
-                        level: level.current.value,
-                        gender: gender.current.value,
-                        email: email,
-                        uid: user.uid,
-                        //
-                        type: "student",
-                        createdAt: serverTimestamp(),
-                        nationalNumber: nationalNumber.current.value.trim(), 
-                    };
-                    await setDoc(doc(db, "users", user.uid), newUser);
-
-                    setIsLoading(false);
-                    // setModalMessage("تم إضافة الطالب بنجاح") ;
-                    //add password to object for printing on screen
-                    newUser["password"] = password;
-                    console.log(newUser);
-                    setModalMessage(newUser);
-                } else {
-                    setIsLoading(false);
-                    setModalMessage("حدث خطأ");
-                }
-
-                //show modal
-                document.getElementById("ModalBtn").click();
-                //reset form
-                document.getElementById("Reset").click();
-
-                signOut(auth);
-            });
         }
 
     }
 
+    
+
+
 
     return (
         <div>
-            <a id="ModalBtn" data-bs-toggle="modal" data-bs-target="#Modal"></a>
-            <Modal msg={modalMessage} />
             <Header />
             <SideBar />
             <div className="container-fluid no-print">
@@ -153,10 +154,10 @@ function AddStudent() {
                     {/* title header & add student btn */}
                     <main className="col-md-9 ms-sm-auto col-lg-10 px-md-4">
                         <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                            <h1 className="h2">إضافة طالب</h1>
+                            <h1 className="h2">تعديل معلومات المستخدم</h1>
                             <div className="btn-toolbar mb-2 mb-md-0">
                                 <div className="alert d-flex justify-content-end" role="alert">
-                                    <button className="button" href="" onClick={handleAddStudent}>
+                                    <button className="button" href="" onClick={handleEditUser}>
                                         <span className="mx-1"> حفظ </span>
                                         <div style={{ display: isLoading ? null : "none" }} className="spinner-border spinner-border-sm" role="status"></div>
                                     </button>
@@ -212,7 +213,7 @@ function AddStudent() {
                                             <label className="label" htmlFor="date">تاريخ الميلاد</label> <br />
                                             <input ref={birthdate} id="date" className="input-text js-inputtop" type="date" required />
                                         </div>
-                                        <div className=" col-lg-3">
+                                        <div className=" col-lg-3" style={{display: user.type === "student" ? null : "none"}}>
                                             <label className="label">الصف</label>
                                             <select ref={level} dir="rtl" className="form-control form-select" required>
                                                 <option value selected> </option>
@@ -228,6 +229,26 @@ function AddStudent() {
                                                 <option value="10">العاشر</option>
                                                 <option value="11">الحادي عشر</option>
                                                 <option value="12">الثاني عشر</option>
+                                            </select>
+                                        </div>
+                                        <div className=" col-lg-3" style={{display: user.type === "teacher" ? null : "none"}}>
+                                            <label className="label">المادة</label>
+                                            <select ref={subject} dir="rtl" className="form-control form-select" required>
+                                                <option value selected> </option>
+                                                <option value="science" >علوم</option>
+                                                <option value="math">رياضيات</option>
+                                                <option value="english">اللغة الانجليزية</option>
+                                                <option value="arabic">اللغة العربية</option>
+                                                <option value="chemistry">الكيمياء</option>
+                                                <option value="physics">الفيزياء</option>
+                                                <option value="history">تاريخ</option>
+                                                <option value="geography">جغرافيا</option>
+                                                <option value="patriotism">وطنية</option>
+                                                <option value="geology">علوم الأرض</option>
+                                                <option value="biology">العلوم الحياتية </option>
+                                                <option value="history_of_jordan">تاريخ الأردن</option>
+                                                <option value="computer_science">علوم الحاسوب  </option>
+                                                <option value="islamics">علوم إسلامية  </option>
                                             </select>
                                         </div>
                                         <div className=" col-lg-3">
@@ -248,7 +269,7 @@ function AddStudent() {
                 </div>
             </div>
         </div>
-    )
+    );
 }
 
-export default AddStudent
+export default EditPage

@@ -7,6 +7,29 @@ import SideBar from '../components/SideBar';
 import TeacherSidebar from '../components/TeacherSidebar';
 
 function ProfilePage() {
+
+    const levelMap = {
+        1: "الأول",
+        2: "الثاني",
+        3: "الثالث",
+        4: "الرابع",
+        5: "الخامس",
+        6: "السادس",
+        7: "السابع",
+        8: "الثامن",
+        9: "التاسع",
+        10: "العاشر",
+        11: "الحادي عشر",
+        12: "الثاني عشر",
+    }
+
+    const genderMap = {
+        male: "ذكر",
+        female: "أنثى"
+    };
+
+
+
     const currentUser = useAuth();
     const [info, setInfo] = useState(null);
 
@@ -34,15 +57,15 @@ function ProfilePage() {
 
 
 
-  // render
+    // render
 
-  if (!info) {
-    return (
-      <div>
+    if (!info) {
+        return (
+            <div>
 
-      </div>
-    )
-  }
+            </div>
+        )
+    }
 
 
     return (
@@ -64,13 +87,6 @@ function ProfilePage() {
                     <main className="col-md-9 ms-sm-auto col-lg-10 px-md-4">
                         <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
                             <div className="col-10 mx-auto ">
-                                {/* <div className="d-flex justify-content-between align-items-center mb-3">
-                                        <div className=" d-flex flex-column align-items-center text-center p-3 py-5">
-                                            <img className=" mt-5" width="150px" src="images/profile.png" />
-                                            <span className="mt-2 font-weight-bold"> احمد مصطفى احمد علي </span>
-                                            <span className="text-black-50">AMALI@TWAFAWOQ.EDU.JO</span>
-                                        </div>
-                                    </div> */}
                                 <div className="row mt-2">
                                     <div className="col-md-4" >
                                         <label className="labels">الاسم الاول</label>
@@ -87,30 +103,27 @@ function ProfilePage() {
                                 </div>
                                 <div className="row mt-3">
                                     <div className="col-md-12 ">
-                                        <label className="labels">رقم الهاتف</label>
-                                        <input value={""} type="text" className="form-control mt-2" readOnly />
+                                        <label className="labels">الرقم الوطني</label>
+                                        <input value={info.nationalNumber} type="text" className="form-control mt-2" readOnly />
                                     </div>
-                                    <div className="col-md-12">
+                                    <div className="col-md-12" style={{display: info.type !== "teacher" ? "none" : null}}>
                                         <label className="labels mt-2">المادة</label>
                                         <input value={info.subjectAr} type="text" className="form-control mt-2" readOnly />
                                     </div>
+                                    
                                     <div className="col-md-12">
-                                        <label className="labels mt-2">المرحلة الدراسية المسؤول عنها</label>
-                                        <input value={""} type="text" className="form-control mt-2" readOnly  />
-                                    </div>
-                                    <div className="col-md-12">
-                                        <label className="labels mt-2">مكان الدراسة</label>
-                                        <input value={""} type="text" className="form-control mt-2" readOnly />
+                                        <label className="labels mt-2">تاريخ الولادة</label>
+                                        <input value={info.birthdate} type="text" className="form-control mt-2" readOnly />
                                     </div>
                                 </div>
-                                <div className="row mt-3">
-                                    <div className="col-md-6">
-                                        <label className="labels">البلد</label>
-                                        <input value={""} type="text" className="form-control mt-2" readOnly />
+                                <div className="row mt-3" >
+                                    <div className="col-md-6" style={{display: info.type === "student" ? null : "none"}}>
+                                        <label className="labels">الصف</label>
+                                        <input value={levelMap[info.level]} type="text" className="form-control mt-2" readOnly />
                                     </div>
                                     <div className="col-md-6">
-                                        <label className="labels">المحافظة</label>
-                                        <input value={""} type="text" className="form-control mt-2" readOnly />
+                                        <label className="labels">الجنس</label>
+                                        <input value={genderMap[info.gender]} type="text" className="form-control mt-2" readOnly />
                                     </div>
                                 </div>
                             </div>

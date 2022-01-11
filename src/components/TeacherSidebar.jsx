@@ -8,7 +8,7 @@ function TeacherSidebar() {
                 <div className="position-sticky pt-3">
                     <ul className="nav flex-column">
                         <li className="nav-item">
-                            <a className={pathName === "/account" || pathName.includes("teacher") ? "nav-link sidebar-active" : "nav-link"} aria-current="page" href="/account">
+                            <a className={pathName === "/account" ? "nav-link sidebar-active" : "nav-link"} aria-current="page" href="/account">
                                 <i className="fas fa-home"></i>
                                 الرئيسية
                             </a>

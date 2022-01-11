@@ -25,6 +25,8 @@ import TeacherAllClasses from '../pages/TeacherPages/TeacherAllClasses'
 import ProfilePage from '../pages/ProfilePage'
 import ListOfStudents from '../pages/TeacherPages/ListOfStudents'
 import ListOfStudentGrades from '../pages/TeacherPages/ListOfStudentGrades'
+import EditPage from '../pages/EditPage'
+import EditClassroom from '../pages/EditClassroom'
 
 
 
@@ -49,6 +51,8 @@ function AppRouter() {
                     <Route exact path='/account/addteacher' element={ <AddTeacher /> } />
                     <Route exact path='/account/classroomlist' element={ <ClassroomList /> } />
                     <Route exact path='/account/addclassroom' element={ <AddClassroom /> } />
+                    <Route exact path='/account/edit-user' element={ <EditPage /> } />
+                    <Route exact path='/account/edit-classroom' element={ <EditClassroom /> } />
 
                     <Route exact path='/student' element={ <StudentDashboard /> } />
                     <Route exact path='/account/class' element={ <StudentActivity /> } />

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import Header from '../../components/Header'
 import TeacherSidebar from '../../components/TeacherSidebar'
 import { useLocation } from 'react-router'
@@ -6,14 +6,77 @@ import { Link } from 'react-router-dom'
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import { db } from '../../fbConfig';
 import $ from 'jquery'
+import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 
 
 function AddMaterial() {
 
+  const [finished, setfinished] = useState(true);
+  var paperworkURL = "";
+  var contentURL = "";
+  var content2URL = "";
+  
+
+  function uploadFile(e) {
+    const file = e.target.files;
+    console.log(e.target.id);
+    console.log(file[0].name);
+    var u;
+
+
+    //* Create a root reference
+    const storage = getStorage();
+
+    if (!file) return;
+    const storageRef = ref(storage, `files/${file[0].name}`);
+   
+    const uploadTask = uploadBytesResumable(storageRef, file[0]);
+
+    uploadTask.on("state_changed", (snapshot) => {
+      const prog = Math.round(
+        (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+      );
+      console.log(prog);
+      setfinished(false);
+      document.getElementById("prevBtn").disabled = true;
+      document.getElementById("nextBtn").disabled = true;
+    },
+      err => console.log(err),
+      () => {
+        getDownloadURL(uploadTask.snapshot.ref)
+          .then(url => {
+            console.log(url);
+            u = url;
+            console.log(u);
+            if (e.target.id === "uploade-video") {
+              console.log("Asfooooor");
+              content2URL = u;
+              // content2URL = u;
+              // console.log(content2URL);
+            }
+            else if (e.target.id === "uploade-paper") {
+              console.log("Muttttaz");
+              contentURL = u;
+            }
+            else if (e.target.id === "uploade-paper2") {
+              console.log("malllllaaaaaaak");
+              paperworkURL = u;
+            }
+          })
+        document.getElementById("prevBtn").disabled = false;
+        document.getElementById("nextBtn").disabled = false;
+        
+        setfinished(true);
+      }
+    );
+  }
+
   const lectureTitle = useRef("");
   const lectureDesc = useRef("");
   const lectureLink = useRef("");
-  const linkTitle = useRef("");
+  const contentTitle = useRef("");
+  const content2Title = useRef("");
+  const paperworkTitle = useRef("");
 
   const location = useLocation();
   const { classroom, user, subject } = location.state;
@@ -56,11 +119,11 @@ function AddMaterial() {
 
     for (i = 0; i < y.length; i++) {
 
-      if (y[i].value == "" && y[i].id != "uploade-title1" && y[i].id != "uploade-paper1" && y[i].id != "uploade-title2" && y[i].id != "uploade-paper2" && y[i].id != "uploade-title3" && y[i].id != "uploade-paper3") {
+      if (y[i].value == "" && y[i].id != "uploade-paper" && y[i].id != "uploade-title2" && y[i].id != "uploade-paper2" && y[i].id != "uploade-title3" && y[i].id != "uploade-paper3") {
 
         y[i].className += " invalid";
 
-        valid = false;
+        valid = true;
       }
     }
 
@@ -106,9 +169,11 @@ function AddMaterial() {
       document.getElementById("nextBtn").style.display = "none";
       document.getElementById("prevBtn").style.display = "none";
 
-       
-      lectureLink.current.value = lectureLink.current.value.replace("watch?v=", "embed/" );
-    
+
+
+      lectureLink.current.value = lectureLink.current.value.replace("watch?v=", "embed/");
+
+      
 
       let newLecture = {
         classroomID: classroom.id,
@@ -121,6 +186,13 @@ function AddMaterial() {
         teacherNameAr: user.firstNameAr + " " + user.lastNameAr,
         subjectName: subject.name,
         subjectNameAr: subject.nameAr,
+        content2Title: content2Title.current.value,
+        content2URL: content2URL,
+        paperworkTitle: paperworkTitle.current.value,
+        paperworkURL: paperworkURL,
+        contentTitle: contentTitle.current.value,
+        contentURL: contentURL,
+        
       };
       addDoc(collection(db, "lectures"), newLecture)
         .then(() => {
@@ -170,26 +242,31 @@ function AddMaterial() {
                 <p><input ref={lectureDesc} autoComplete='off' id="desc" placeholder="الوصف ..." /></p>
               </div>
               <div className="tab">محتويات الحصة :
-                <p><input ref={lectureLink} autoComplete='off' id="link" placeholder="رابط الفيديو (منصة اليوتيوب)..." onInput="this.className = ''" /></p>
-                <p> <input ref={linkTitle} autoComplete='off' id="uploade-title1" type="text" placeholder="عنوان المحتوى (۱) ..." />
+                <p>
+                  <input ref={lectureLink} autoComplete='off' id="link" placeholder="رابط الفيديو (منصة اليوتيوب)..." />
                 </p>
                 <p>
-                  إضافة المحتوى (۱)
-                  <br />  <input id="uploade-paper1" type="file" onInput="this.className = ''" />
+                 <input ref={content2Title}  autoComplete='off' id="uploade-title1" type="text" placeholder="عنوان المحتوى (۱) ..." />
+                </p>
+                <p>
+                  رفع محتوى
+                  <br />
+                  <input id="uploade-video" type="file" onChange={(event) => uploadFile(event)} />
+                  <div style={{ display: !finished ? null : "none" }} className="spinner-border spinner-border-sm" role="status"></div>
                 </p>
               </div>
               <div className="tab">محتويات الحصة :
-                <p> <input autoComplete='off' id="uploade-title2" type="text" placeholder="عنوان المحتوى (۲) ..." />
+                <p> <input ref={contentTitle} autoComplete='off' id="uploade-title2" type="text" placeholder="عنوان المحتوى ..." />
                 </p>
                 <p>
-                  إضافة المحتوى (۲)
-                  <br />  <input autoComplete='off' id="uploade-paper2" type="file" onInput="this.className = ''" />
+                  إضافة المحتوى 
+                  <br />  <input autoComplete='off' id="uploade-paper2" type="file" onChange={(event) => uploadFile(event)} />
                 </p>
-                <p> <input autoComplete='off' id="uploade-title3" type="text" placeholder="عنوان ورقة العمل  ..." />
+                <p> <input ref={paperworkTitle} autoComplete='off' id="uploade-title3" type="text" placeholder="عنوان ورقة العمل  ..." />
                 </p>
                 <p>
                   إضافة ورقة عمل
-                  <br />  <input autoComplete='off' id="uploade-paper3" type="file" onInput="this.className = ''" />
+                  <br />  <input autoComplete='off' id="uploade-paper" type="file" onChange={(event) => uploadFile(event)} />
                 </p>
               </div>
               <div style={{ overflow: 'auto' }}>

@@ -3,7 +3,8 @@ import { db, useAuth } from '../fbConfig'
 import Header from '../components/Header'
 import SideBar from '../components/SideBar'
 import { query, where, getDocs, collection } from 'firebase/firestore';
-import TableEntry from '../components/TableEntry';
+import { Link } from 'react-router-dom';
+
 
 function ClassroomList() {
     const user = useAuth();
@@ -14,11 +15,20 @@ function ClassroomList() {
     let members = 0;
     function createTable(elem) {
         return (
-            <tr>
+            <tr key={elem + Math.random()}>
                 <th scope="row">{counter++}</th>
                 <td>{elem.name}</td>
                 <td className='text-center'>{elem.members}</td>
-                <td> <i className="fas fa-edit icon-hover"></i> </td>
+                <td> 
+                <Link 
+                  to="/account/edit-classroom"
+                  state={{classroom: elem}}
+                  style={{color: "#000"}}
+                  >
+                    <i className="fas fa-edit icon-hover"></i> 
+                  </Link>
+                  </td>
+                
             </tr>
         );
     }
@@ -94,7 +104,7 @@ function ClassroomList() {
                         <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
                             <div className="col-10 mx-auto mt-5">
                                 <table className="table table-striped table-hover table-bordered">
-                                    <thead style={{ display: list.length ? null : "none" }}>
+                                    <thead>
                                         <tr>
                                             <th style={{width:"50px"}} scope="col">#</th>
                                             <th style={{width:"400px"}} scope="col">اسم الصف</th>
@@ -102,7 +112,7 @@ function ClassroomList() {
                                             <th style={{width:"50px"}} scope="col"></th>
                                         </tr>
                                     </thead>
-                                    <div style={{ display: !list.length ? null : "none" }} className="p-5 spinner-border spinner-border-lg" role="status"></div>
+                                    {/* <div style={{ display: !list.length ? null : "none" }} className="p-5 spinner-border spinner-border-lg" role="status"></div> */}
 
                                     <tbody>
                                         {list.map(createTable)}
