@@ -27,6 +27,8 @@ import ListOfStudents from '../pages/TeacherPages/ListOfStudents'
 import ListOfStudentGrades from '../pages/TeacherPages/ListOfStudentGrades'
 import EditPage from '../pages/EditPage'
 import EditClassroom from '../pages/EditClassroom'
+import LecturePage from '../pages/TeacherPages/LecturePage'
+import TeacherPaperwork from '../pages/TeacherPages/TeacherPaperwork'
 
 
 
@@ -62,11 +64,13 @@ function AppRouter() {
 
                     <Route exact path='/teacher' element={ <TeacherDashboard /> } /> {/* صفوف */}
                     <Route exact path='/teacher/add-material' element={ <AddMaterial /> } />
+                    <Route exact path='/teacher/paperwork' element={ <TeacherPaperwork /> } />
                     <Route exact path='/teacher/create-test' element={ <CreateTest /> } />
                     <Route exact path='/teacher/student-list' element={ <ListOfStudents /> } />
                     <Route exact path='/teacher/student-gradelist' element={ <ListOfStudentGrades /> } />
                     <Route exact path='/teacher/all-classes' element={ <TeacherAllClasses /> } /> {/* الحصص */}
-                    <Route exact path='/teacher/all-classes/class' element={ <TeacherAllClasses /> } /> {/* حصة وحدة */}
+                    <Route exact path='/teacher/all-classes/class' element={ <LecturePage /> } /> {/* حصة وحدة */}
+                    
 
 
 

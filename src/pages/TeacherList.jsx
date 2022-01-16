@@ -12,17 +12,7 @@ function TeacherList() {
     const [list, setList] = useState([])
     let temp = [];
     let counter = 1;
-    function createTable(elem) {
-        let keyVal = Math.random();
-        return (
-            <TableEntry
-             key={keyVal}
-             user={elem} 
-             icon="fas fa-edit icon-hover"
-             counter={counter++}    
-             />
-        );
-    }
+ 
 
     useEffect(() => {
         async function getUser () {
@@ -53,10 +43,10 @@ function TeacherList() {
         <div className="container-fluid">
             <div className="row mt-5">
                 {/* title header & add teacher btn */}
-                <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-                    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                        <h1 class="h2">قائمة المعلمين</h1>
-                        <div class="btn-toolbar mb-2 mb-md-0">
+                <main className="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+                    <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                        <h1 className="h2">قائمة المعلمين</h1>
+                        <div className="btn-toolbar mb-2 mb-md-0">
                             <div className="alert d-flex justify-content-end" role="alert">
                                 <a className="button" href="/account/addteacher">
                                     <span> إضافة معلم </span>
@@ -68,8 +58,8 @@ function TeacherList() {
                 </main>
                 {/* end of title header */}
                 {/* table */}
-                <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-                    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <main className="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+                    <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
                     <div className="col-10 mx-auto mt-5">
                     <table className="table table-striped table-hover table-bordered">
                         <thead>
@@ -82,7 +72,11 @@ function TeacherList() {
                             </tr>
                         </thead>
                         <tbody>
-                            {list.map(createTable)}
+                        {list.map((elem, index) => {
+                                            return (
+                                                <TableEntry key={elem + index} user={elem} icon="fas fa-edit icon-hover" counter={counter++} />
+                                            );
+                                        })}
                         </tbody>
                         </table>
                     </div>

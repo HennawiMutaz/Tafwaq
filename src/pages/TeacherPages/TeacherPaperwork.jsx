@@ -1,32 +1,31 @@
-import React, { useEffect, useState } from 'react'
-import { db } from '../../fbConfig';
-import { query, where, getDocs, collection } from 'firebase/firestore';
-import TableEntry from '../../components/TableEntry';
+import React, {useEffect, useState} from 'react'
 import Header from '../../components/Header';
-import StudentSidebar from '../../components/StudentSidebar';
-import SideBar from '../../components/SideBar';
 import TeacherSidebar from '../../components/TeacherSidebar';
-import { useLocation } from 'react-router'
+import { useLocation } from 'react-router';
+import { query, where, getDocs, collection } from 'firebase/firestore';
+import { db } from '../../fbConfig';
 
 
 
-function ListOfStudentGrades() {
 
+function TeacherPaperwork() {
+    
+    
     const location = useLocation()
-    const { user, classroom, subject } = location.state
+    const { classroom, lecture } = location.state
     const [list, setList] = useState([])
     const [list2, setList2] = useState([])
     let temp = [];
     let temp2 = [];
     let counter = 1;
-
+    
     useEffect(() => {
         async function getStudents() {
             try {
                 // const q = query(collection(db, "users"), where("classroomID", "==", classroom?.id)); //! where the grades of teacher subject are displayed only.
-                const subsQuery = query(collection(db, 'classrooms', classroom.id, 'submissions'), where("classroomID", "==", classroom.id));
-
-
+                const subsQuery = query(collection(db, 'classrooms', classroom.id, 'submissions'), where("classroomID", "==", classroom.id), where("lectureID","==",lecture.id));
+    
+    
                 // const querySnapshot = await getDocs(q);
                 const subsQuerySnapshot = await getDocs(subsQuery);
                 // querySnapshot.forEach((doc) => {
@@ -43,26 +42,25 @@ function ListOfStudentGrades() {
                 // setList(temp);
                 setList2(temp2);
             }
-
+    
         }
         return getStudents();
     }, [])
 
 
-    
+
     return (
         <div>
+            <div>
             <Header />
-            {user?.type === "teacher" ? <TeacherSidebar /> : (user?.type === "student" ? <StudentSidebar /> : <SideBar />)}
-
-
+            <TeacherSidebar />
 
             <div className="container-fluid">
                 <div className="row mt-5">
                     {/* title header & add student btn */}
                     <main className="col-md-9 ms-sm-auto col-lg-10 px-md-4">
                         <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                            <h1 className="h2">العلامات </h1>
+                            <h1 className="h2">تسليم الطلاب </h1>
 
                         </div>
                     </main>
@@ -88,7 +86,7 @@ function ListOfStudentGrades() {
                                                     <td>{counter++}</td>
                                                     <td>{elem.studentNameAr}</td>
                                                     <td>{elem.lectureName}</td>
-                                                    <td>{elem.studentSubmission.length != 0 ? <a href={elem.studentSubmission}>{elem.fileName}</a> : '-' }</td>
+                                                    <td>{elem.studentSubmission.length !== 0 ? <a href={elem.studentSubmission}>{elem.fileName}</a> : '-' }</td>
                                                     <td></td> 
                                                 </tr>
                                             );
@@ -104,7 +102,9 @@ function ListOfStudentGrades() {
                 </div>
             </div>
         </div>
+
+        </div>
     )
 }
 
-export default ListOfStudentGrades
+export default TeacherPaperwork

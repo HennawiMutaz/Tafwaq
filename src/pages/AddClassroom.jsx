@@ -143,7 +143,7 @@ function AddClassroom() {
     useEffect(async () => {
        
         try {
-            const q = query(collection(db, "users"), where("type", "==", "student"), where("level", "==", id));
+            const q = query(collection(db, "users"), where("type", "==", "student"), where("level", "==", level.current.value));
             const teachersQuery = query(collection(db, "users"), where("type", "==", "teacher"));
             const teacherSnapshot = await getDocs(teachersQuery);
             teacherSnapshot.forEach((doc) => {
@@ -173,12 +173,12 @@ function AddClassroom() {
         e.preventDefault();
         setIsLoading(true);
         console.log(level.current.value, sectionNumber.current.value);
-        // if (level.current.value || sectionNumber.current.value) {
-        //     setModalMessage("الرجاء إدخال المعلومات بشكل صحيح");
-        //     document.getElementById("ModalInfoBtn").click();
-        //     setIsLoading(false);
-        //     return;
-        // }
+        if (level.current.value == "true" || sectionNumber.current.value =="true") {
+            alert("الرجاء إدخال المعلومات بشكل صحيح");
+            // document.getElementById("ModalInfoBtn").click();
+            setIsLoading(false);
+            return;
+        }
         // Generate Classroom Name
         setClassroomName(`${levelMap[level?.current?.value]}  (${sectionNumberMap[sectionNumber?.current?.value]})`);
 

@@ -325,6 +325,31 @@ body {
   text-decoration: none;
 }
 
+.button-delete {
+  background-color: #dc3545;
+  font-family: "Tajawal", sans-serif;
+  display: inline-block;
+  font-weight: bolder;
+  min-width: 150px;
+  margin: 20px auto;
+  color: #fefefe;
+  font-size: 1.2em;
+  padding: 1em;
+  border-radius: 4px;
+  text-align: center;
+  position: relative;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  border: 0;
+  transition: border-radius linear 0.05s, width linear 0.05s;
+  text-decoration: none;
+}
+.button-delete:hover {
+  color: #FFF;
+  background-color: #bb2d3b;
+}
+
 .button:hover {
   background-color: #1a9986 ;
   color: #FFF;

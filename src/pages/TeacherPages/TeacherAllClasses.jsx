@@ -74,7 +74,7 @@ function TeacherAllClasses(props) {
                                     <Link
                                         to="/teacher/student-gradelist"
                                         className="ms-3 button"
-                                        state={{ user: user, subject: subject, classroom: classroom }}
+                                        state={{ user: user, subject: subject, classroom: classroom}}
                                     >
                                         <span className="mx-1"> العلامات  </span>
                                     </Link>
@@ -88,7 +88,14 @@ function TeacherAllClasses(props) {
                                 <div className="row center-card">
                                     {lectures.map((elem, index) => {
                                         return (
-                                            <a key={elem.title || index} href="class.html" className="data-card col-xl-3 col-sm-6">
+                                            <Link
+                                                to="/teacher/all-classes/class"
+                                                state={{
+                                                    lecture: elem,
+                                                    classroom: classroom,
+                                                    user: user
+                                                }}
+                                                key={elem.title || index} className="data-card col-xl-3 col-sm-6">
                                                 <h3> {elem.title} </h3>
                                                 <h4>{elem.createdAt.toDate().toLocaleDateString('ar-EG')}</h4>
                                                 <span className="link-text">
@@ -97,7 +104,7 @@ function TeacherAllClasses(props) {
                                                     </svg>
                                                     مشاهدة الدرس
                                                 </span>
-                                            </a>
+                                            </Link>
                                         );
                                     })}
                                     

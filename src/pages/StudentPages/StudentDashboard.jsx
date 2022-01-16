@@ -59,11 +59,11 @@ function StudentDashboard(props) {
                             {/* <div class="container-fluid"> */}
                             {lectures.map((elem, index) => {
                                         return (
-                                        <Card key={elem || index} lectures={elem} src={`images/${elem.subjectName}.png`} des={elem.description} subjectName={elem.subjectNameAr} topic={elem.title} date={elem.createdAt.toDate().toLocaleDateString('ar-EG')} />    
+                                        <Card key={elem + index} user={props?.info} lectures={elem} src={`images/${elem.subjectName}.png`} des={elem.description} subjectName={elem.subjectNameAr} topic={elem.title} date={elem.createdAt.toDate().toLocaleDateString('ar-EG')} />    
                                         );
                                     })}
                            
-                            <div className="container">
+                            <div style={{display: lectures.length==0 ? null : "none"}} className="container">
                                 <section className="cards">
                                     <article className="no-card">
                                         <div className="row">

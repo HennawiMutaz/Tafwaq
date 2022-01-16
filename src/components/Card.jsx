@@ -7,6 +7,7 @@ function Card(props) {
          to="/account/class" 
          state={{
                     lecture: props.lectures,
+                    user: props.user,
                 }}
          >
             <div className="container mb-4">

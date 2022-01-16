@@ -13,8 +13,9 @@ import {
   onSnapshot,
   serverTimestamp,
   query,
-  orderBy,
+  getDocs,
   setDoc,
+  where,
 } from 'firebase/firestore';
 import { db } from '../fbConfig';
 import { initializeApp } from "firebase/app";
@@ -70,7 +71,7 @@ function AddTeacher() {
     const [isLoading, setIsLoading] = useState(false);
 
 
-    function handleAddTeacher(e) {
+    async function handleAddTeacher(e) {
         e.preventDefault();
         const isEmpty = str => !str.trim().length;
         let flag = false;
@@ -85,17 +86,45 @@ function AddTeacher() {
         console.log( !birthdate.current.value )  //if empty => output: true
         console.log(subject.current.value);
         
-        if (flag || gender.current.value === "true" || !birthdate.current.value || subject.current.value === "true") {
+        if (flag || gender.current.value == "true" || !birthdate.current.value || subject.current.value == "true") {
             alert("الرجاء إدخال المعلومات بشكل صحيح");
         }
         else {
         setIsLoading(true);
 
         // 
+        const fn = firstNameEn.current.value.trim().toLowerCase();
+        const mn = midNameEn.current.value.trim().toLowerCase();
+        const ln = lastNameEn.current.value.trim().toLowerCase();
+        let username = fn.slice(0,2) + mn.slice(0,2) + ln + birthdate.current.value.slice(0,4);
+        let email = username + "@tafwaq.edu.jo";
+        
 
-        const email = firstNameEn.current.value.trim().toLowerCase().slice(0,2) + midNameEn.current.value.trim().toLowerCase().slice(0,2) + lastNameEn.current.value.trim().toLowerCase() + birthdate.current.value.slice(0,4) + "@tafwaq.edu.jo";
-
-        console.log(email);
+            try {
+                let temp = [];
+                const q = query(collection(db, "users"), where("type","!=","admin"));
+  
+              const querySnapshot = await getDocs(q);
+              querySnapshot.forEach((doc) => {
+                  let e = doc.data().email;
+                  console.log(e);
+                  if (e.includes(username)) {
+                      console.log(doc.id, " => ", doc.data());
+                      temp.push(e);
+                  }
+              });       
+              const count = temp.length;
+              console.log(count);
+              if (count >= 1) {
+                console.log("already in use...adding count");
+                email = username + count + "@tafwaq.edu.jo";
+              }
+             } catch (error) {
+                 console.log(error);
+             }
+             
+             console.log(email);
+        
 
         let chars = "0123456789abcdefghijklmnopqrstuvwxyz!@#$%^&*()ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         let passwordLength = 8;

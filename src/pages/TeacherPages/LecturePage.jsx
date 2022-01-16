@@ -1,27 +1,52 @@
 import React from 'react'
 import Header from '../../components/Header'
-import StudentSidebar from '../../components/StudentSidebar'
 import { useLocation } from 'react-router'
 import { Link } from 'react-router-dom';
+import TeacherSidebar from '../../components/TeacherSidebar';
+import { doc, deleteDoc } from "firebase/firestore";
+import { db } from '../../fbConfig';
 
 
-function StudentActivity() {
+function LecturePage() {
 
     const location = useLocation();
-    const { lecture, user } = location.state;
+    const { lecture, user, classroom } = location.state;
+
+    //TODO: ADD DELETE & EDIT BUTTON 
 
 
+    function handleDeleteLecture() {
+        if(window.confirm("هل أنت متأكد من حذف الحصة كلياً ؟") == true) {
+            
 
-  
+            //delete from firestore
+            deleteDoc(doc(db, "lectures", lecture.id))
+            .then(() => console.log("deleted lecture from firestore"))
+            .catch((error) => console.log(error))
+
+            alert("تم حذف الحصة بنجاح");
+            window.history.go(-1);
+        }
+    }
 
 
     return (
         <div className="dashboard">
             <Header />
-            <StudentSidebar />
+            <TeacherSidebar />
             <link rel="stylesheet" href="/styles/studentpage.css" />
             <div className="container-fluid">
                 <div className="row mt-5">
+                    <main style={{display: user.type === "teacher" ? null : 'none'}} className="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+                        <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom mt-sm-5">
+                            <div className="btn-toolbar mb-2 mb-md-0">
+                                <div className="alert d-flex justify-content-end" role="alert">
+                            <button style={{marginLeft: '40px'}} className='button'>تعديل</button>
+                            <button className='button-delete' onClick={handleDeleteLecture}>حذف</button>
+                                </div>
+                            </div>
+                        </div>
+                    </main>
                     <main className="col-md-9 ms-sm-auto col-lg-10 px-md-4">
                         <div className="container">
                             <section className="cards">
@@ -32,9 +57,11 @@ function StudentActivity() {
                                             <h6>أ. {lecture.teacherNameAr}</h6>
                                             <p> {lecture?.description}</p>
                                             <Link
-                                                to="/account/all-classes"
+                                                to="/teacher/all-classes"
                                                 state={{
-                                                    lecture: lecture
+                                                    lecture: lecture,
+                                                    classroom: classroom,
+                                                    user: location.state.user
                                                 }}
                                             >
                                                 <button className="btn btn-outline-primary btn-lg override">
@@ -49,23 +76,19 @@ function StudentActivity() {
                         <iframe className="center" width="420" height="315" src={lecture.link} frameBorder="0" allowFullScreen></iframe>
                         <div className="row">
                             <div className=" col-lg-7  col-md-12 col-sm-12">
-
-                                <a href="" style={{ display: lecture.contentURL.length == 0 ? "none" : null }}>
+                                <a href={lecture.paperworkURL} style={{ display: lecture.contentURL.length == 0 ? "none" : null }}>
                                     <h5 className="attch">
                                         <svg xmlns="http://www.w3.org/2000/svg" width={16} height={16} fill="currentColor" className="bi bi-eye-fill" viewBox="0 0 16 16">
                                             <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z" />
                                             <path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8zm8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z" />
-                                        </svg> {lecture.contentTitle}
+                                        </svg>
+                                        {lecture.contentTitle}
                                     </h5>
                                 </a>
-                                <Link
-                                    to="/student/paperwork"
-                                    style={{ display: lecture.paperworkURL.length == 0 ? "none" : null }}
-                                    state={{
-                                        lecture: lecture,
-                                        user: user,
-                                    }}
-                                >
+                                <Link 
+                                    to="/teacher/paperwork" 
+                                    state={{lecture: lecture, classroom: classroom}}
+                                    style={{ display: lecture.paperworkURL.length == 0 ? "none" : null }}>
                                     <h5 className="attch">
                                         <svg xmlns="http://www.w3.org/2000/svg" width={16} height={16} fill="currentColor" className="bi bi-file-earmark-arrow-down" viewBox="0 0 16 16">
                                             <path d="M8.5 6.5a.5.5 0 0 0-1 0v3.793L6.354 9.146a.5.5 0 1 0-.708.708l2 2a.5.5 0 0 0 .708 0l2-2a.5.5 0 0 0-.708-.708L8.5 10.293V6.5z" />
@@ -107,4 +130,4 @@ function StudentActivity() {
     )
 }
 
-export default StudentActivity
+export default LecturePage

@@ -14,6 +14,7 @@ function LoginPage() {
     e.preventDefault();
     try {
       await login(emailRef.current.value.trim(), passwordRef.current.value); 
+
       window.location.replace('/account');
     } catch (error) {
       setIncorrect(true);
@@ -32,20 +33,22 @@ function LoginPage() {
   useEffect(() => {
     setTimeout(() => {
       setIsloading(false);
-    }, 800);
+    }, 2000);
     return;
   }, [])
 
 
-
-
+ if (isloading)
+    return (
+      <Preloader hide={!isloading ? { opacity: 0, zIndex: -1 } : null} />
+    );
 
 
 
     return (
 
       <div id="login-page" className="bg-light">
-          <Preloader hide={!isloading ? {opacity:0, zIndex:-1} : null} />
+          {/* <Preloader hide={!isloading ? {opacity:0, zIndex:-1} : null} /> */}
           <div className="login-wrap d-flex align-items-center flex-wrap justify-content-center">
             <div className="container-fluid">
               <div className="row align-items-center">

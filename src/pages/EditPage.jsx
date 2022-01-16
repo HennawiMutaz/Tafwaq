@@ -14,7 +14,9 @@ import {
     orderBy,
     setDoc,
 } from 'firebase/firestore';
-import { db } from '../fbConfig';
+import { auth, db } from '../fbConfig';
+import { deleteUser } from 'firebase/auth';
+
 function EditPage() {
     const subjectMap = {
         science: "علوم",
@@ -91,10 +93,10 @@ function EditPage() {
         console.log(level.current.value);
         
         
-        if (flag || gender.current.value === "true" || !birthdate.current.value) {
+        if (flag || gender.current.value == "true" || !birthdate.current.value) {
             alert("الرجاء إدخال المعلومات بشكل صحيح");
         }
-        else if (flag || (user.type === "student" && level.current.value === "true")) {
+        else if (flag || (user.type === "student" && level.current.value == "true")) {
             
         }
         else if (nationalNumber.current.value.length !== 10 || !nationalNumber.current.value.match(/^[0-9]+$/)) {
@@ -141,7 +143,22 @@ function EditPage() {
 
     }
 
-    
+    function handleDeleteUser() {
+        if(window.confirm("هل أنت متأكد من حذف المستخدم كلياً ؟") == true) {
+            //delete from auth
+            // deleteUser(auth,user.uid)
+            // .then(() => console.log("deleted user from auth"))
+            // .catch((error) => console.log(error))
+
+            //delete from firestore
+            deleteDoc(doc(db, "users", user.uid))
+            .then(() => console.log("deleted user from firestore"))
+            .catch((error) => console.log(error))
+
+            alert("تم حذف المستخدم بنجاح");
+            window.history.go(-1);
+        }
+    }
 
 
 
@@ -157,9 +174,14 @@ function EditPage() {
                             <h1 className="h2">تعديل معلومات المستخدم</h1>
                             <div className="btn-toolbar mb-2 mb-md-0">
                                 <div className="alert d-flex justify-content-end" role="alert">
-                                    <button className="button" href="" onClick={handleEditUser}>
+                                    <button className="button"  onClick={handleEditUser}>
                                         <span className="mx-1"> حفظ </span>
                                         <div style={{ display: isLoading ? null : "none" }} className="spinner-border spinner-border-sm" role="status"></div>
+                                    </button>
+                                </div>
+                                <div className="alert d-flex justify-content-end" role="alert">
+                                    <button className="button-delete" onClick={handleDeleteUser}>
+                                        <span className="mx-1"> حذف </span>
                                     </button>
                                 </div>
                             </div>

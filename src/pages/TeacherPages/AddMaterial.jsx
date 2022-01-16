@@ -2,210 +2,144 @@ import React, { useEffect, useRef, useState } from 'react'
 import Header from '../../components/Header'
 import TeacherSidebar from '../../components/TeacherSidebar'
 import { useLocation } from 'react-router'
-import { Link } from 'react-router-dom'
-import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+import { collection, addDoc, serverTimestamp, setDoc, doc, updateDoc } from "firebase/firestore";
 import { db } from '../../fbConfig';
-import $ from 'jquery'
 import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 
 
 function AddMaterial() {
 
-  const [finished, setfinished] = useState(true);
-  var paperworkURL = "";
-  var contentURL = "";
-  var content2URL = "";
-  
-
-  function uploadFile(e) {
-    const file = e.target.files;
-    console.log(e.target.id);
-    console.log(file[0].name);
-    var u;
+  const [loading, setLoading] = useState(false);
+  const [done, setDone] = useState(false);
 
 
+  async function submitForm(e) {
+
+    e.preventDefault();
+
+
+    const allFiles = document.querySelectorAll('[data-file]');
+
+
+    let newLecture = {
+      classroomID: classroom.id,
+      classroomName: classroom.name,
+      classroomSectionNumber: classroom.sectionNumber,
+      description: lectureDesc.current.value,
+      link: "", //!empty until we check if youtube or file
+      subjectID: subject.id,
+      title: lectureTitle.current.value,
+      createdAt: serverTimestamp(),
+      teacherID: user.uid,
+      teacherNameAr: user.firstNameAr + " " + user.lastNameAr,
+      subjectName: subject.name,
+      subjectNameAr: subject.nameAr,
+      paperworkURL: "",
+      contentTitle: contentTitle.current.value,
+      contentURL: "",
+      id: "",
+    };
+    console.log(lectureLink.current.value);
+    console.log(allFiles[0].files.length);
+   
+
+    if (lectureLink.current.value != '' && !lectureLink.current.value.startsWith('https://www.youtube.com/watch?v=')) {
+      alert("الرجاء إدخال رابط يوتوب صحيح");
+      return;
+    }
+
+    if (allFiles[0].files.length != 0 || lectureLink.current.value != '') {
+      
+    
+    
+    setLoading(true);
+
+    if (lectureLink.current.value != "") { //! if youtube link provided
+      lectureLink.current.value = lectureLink.current.value.replace("watch?v=", "embed/");
+    }
+    newLecture.link = lectureLink.current.value;
+
+
+    
+    //* ADD TO FIRESTORE
+    const docRef = await addDoc(collection(db, "lectures"), newLecture);
+    console.log("Document written with ID: ", docRef.id);
+    updateDoc(docRef, { id: docRef.id }, { merge: true });
+    
+     
+    let numOfCompletedFiles = 0
+    let numOfemptyFiles = 0;
     //* Create a root reference
     const storage = getStorage();
+    for (let i = 0; i < allFiles.length; i++) {
+      const file = allFiles[i].files[0];
+      console.log(i);
+      if (!file) { numOfemptyFiles++; continue;} //! IF NO FILE PROVIDED
+      const storageRef = ref(storage, `files/${classroom.id}/${classroom.sectionNumber}/${subject.name}/${file.name}`);
 
-    if (!file) return;
-    const storageRef = ref(storage, `files/${file[0].name}`);
-   
-    const uploadTask = uploadBytesResumable(storageRef, file[0]);
+      const uploadTask = uploadBytesResumable(storageRef, file);
 
-    uploadTask.on("state_changed", (snapshot) => {
-      const prog = Math.round(
-        (snapshot.bytesTransferred / snapshot.totalBytes) * 100
-      );
-      console.log(prog);
-      setfinished(false);
-      document.getElementById("prevBtn").disabled = true;
-      document.getElementById("nextBtn").disabled = true;
-    },
-      err => console.log(err),
-      () => {
-        getDownloadURL(uploadTask.snapshot.ref)
-          .then(url => {
-            console.log(url);
-            u = url;
-            console.log(u);
-            if (e.target.id === "uploade-video") {
-              console.log("Asfooooor");
-              content2URL = u;
-              // content2URL = u;
-              // console.log(content2URL);
-            }
-            else if (e.target.id === "uploade-paper") {
-              console.log("Muttttaz");
-              contentURL = u;
-            }
-            else if (e.target.id === "uploade-paper2") {
-              console.log("malllllaaaaaaak");
-              paperworkURL = u;
-            }
-          })
-        document.getElementById("prevBtn").disabled = false;
-        document.getElementById("nextBtn").disabled = false;
-        
-        setfinished(true);
-      }
-    );
+      uploadTask.on("state_changed", (snapshot) => {
+        const prog = Math.round(
+          (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+        );
+        console.log(prog);
+        if (prog == 100) {
+          numOfCompletedFiles++; //number of completed
+        }
+      },
+        err => console.log(err),
+        async () => {
+          const url = await getDownloadURL(uploadTask.snapshot.ref);
+          console.log(url);
+          const flag = false;
+          if (allFiles[i].id === "uploade-video" && document.getElementById("uploade-video").files.length != 0) {
+            updateDoc(docRef, { link: url }, { merge: true });
+            console.log("video url updated");
+          }
+          else if (allFiles[i].id === "uploade-paper1") {
+            updateDoc(docRef, { contentURL: url }, { merge: true });
+            console.log("content url updated");
+          }
+          else if (allFiles[i].id === "uploade-paper2") {
+            updateDoc(docRef, { paperworkURL: url }, { merge: true });
+            console.log("paprework url updated");
+          }
+          console.log(numOfCompletedFiles);
+          if (numOfCompletedFiles == (allFiles.length - numOfemptyFiles)) {
+            setDone(true);
+            setLoading(false);
+          }
+          
+        }
+        );
+      } //end of for loop
+
+    } else {
+      alert("الرجاء إدخال رابط الفيديو أو رفع  ملف الفيديو")
+      return;
+    }
+
   }
+
 
   const lectureTitle = useRef("");
   const lectureDesc = useRef("");
   const lectureLink = useRef("");
   const contentTitle = useRef("");
-  const content2Title = useRef("");
-  const paperworkTitle = useRef("");
 
   const location = useLocation();
   const { classroom, user, subject } = location.state;
 
-  var currentTab = 0;
-
-  useEffect(() => {
-
-    // console.log(classroom);
-    // console.log(user);
-    // console.log("^^^^^^^^",subject);
-
-    const title = $("#title");
-    title.on("change", () => { $(this).className = '' });
-
-    const desc = $("#desc");
-    desc.on("change", () => { $(this).className = '' });
-
-    const prevBtn = $("#prevBtn");
-    prevBtn.on("click", () => { nextPrev(-1) });
-
-    const nextBtn = $("#nextBtn");
-    nextBtn.on("click", () => { nextPrev(1) });
 
 
-
-    if (document.getElementById('regForm')) {
-      showTab(currentTab);
-    }
-  }, [])
-
-  // teacher
-
-
-
-  function validateForm() {
-    var x, y, i, valid = true;
-    x = document.getElementsByClassName("tab");
-    y = x[currentTab].getElementsByTagName("input");
-
-    for (i = 0; i < y.length; i++) {
-
-      if (y[i].value == "" && y[i].id != "uploade-paper" && y[i].id != "uploade-title2" && y[i].id != "uploade-paper2" && y[i].id != "uploade-title3" && y[i].id != "uploade-paper3") {
-
-        y[i].className += " invalid";
-
-        valid = true;
-      }
-    }
-
-    if (valid) {
-      document.getElementsByClassName("step")[currentTab].className += " finish";
-    }
-    return valid;
+function clear(f) {
+  if (f.target.getAttribute("data-bs-target") === "#collapseTwo") {
+    lectureLink.current.value = "";
+  } else {
+    document.getElementById("uploade-video").value = '';
   }
-  function fixStepIndicator(n) {
-    var i, x = document.getElementsByClassName("step");
-    for (i = 0; i < x.length; i++) {
-      x[i].className = x[i].className.replace(" active", "");
-    }
-    x[n].className += " active";
-  }
-  function showTab(n) {
-    var x = document.getElementsByClassName("tab");
-    x[n].style.display = "block";
-    if (n == 0) {
-      document.getElementById("prevBtn").style.display = "none";
-    } else {
-      document.getElementById("prevBtn").style.display = "inline";
-    }
-    if (n == (x.length - 1)) {
-      document.getElementById("nextBtn").innerHTML = "حفظ";
-    } else {
-      document.getElementById("nextBtn").innerHTML = "التالي";
-    }
-    fixStepIndicator(n)
-
-  }
-
-
-  function nextPrev(n) {
-    var x = document.getElementsByClassName("tab");
-    if (n == 1 && !validateForm()) return false;
-    x[currentTab].style.display = "none";
-    currentTab = currentTab + n;
-    if (currentTab >= x.length) {
-      //* When Submitted
-
-      document.getElementById("success").style.display = "block";
-      document.getElementById("nextBtn").style.display = "none";
-      document.getElementById("prevBtn").style.display = "none";
-
-
-
-      lectureLink.current.value = lectureLink.current.value.replace("watch?v=", "embed/");
-
-      
-
-      let newLecture = {
-        classroomID: classroom.id,
-        description: lectureDesc.current.value,
-        link: lectureLink.current.value,
-        subjectID: subject.id,
-        title: lectureTitle.current.value,
-        createdAt: serverTimestamp(),
-        teacherID: user.uid,
-        teacherNameAr: user.firstNameAr + " " + user.lastNameAr,
-        subjectName: subject.name,
-        subjectNameAr: subject.nameAr,
-        content2Title: content2Title.current.value,
-        content2URL: content2URL,
-        paperworkTitle: paperworkTitle.current.value,
-        paperworkURL: paperworkURL,
-        contentTitle: contentTitle.current.value,
-        contentURL: contentURL,
-        
-      };
-      addDoc(collection(db, "lectures"), newLecture)
-        .then(() => {
-          console.log("success");
-        })
-        .catch(error => {
-          console.log(error);
-        })
-      return false;
-    }
-    showTab(currentTab);
-  }
-
+}
 
 
 
@@ -227,59 +161,82 @@ function AddMaterial() {
             </div>
           </main>
           <main className="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-            <div id='success' style={{ display: 'none', textAlign: 'center', marginTop: '10px' }}>
+          {/* //TODO: DISPLAYS AT WRONG TIMING */}
+            <div id='success' style={{ display: done ?  null :'none', textAlign: 'center', marginTop: '10px' }}> 
               <h3>تم إضافة الحصة بنجاح</h3>
-              <Link
-                to="/account"
+              <button
                 className="button"
+                onClick={() => window.history.go(-1)}
               >
                 العودة إلى الحصص
-              </Link>
+              </button>
             </div>
-            <form id="regForm" >
-              <div className="tab">
+            <form id="regForm" onSubmit={submitForm} style={{ display: !done ?  null :'none'}}>
+              <div className="">
                 <p><input ref={lectureTitle} autoComplete='off' id="title" placeholder="العنوان ..." /></p>
                 <p><input ref={lectureDesc} autoComplete='off' id="desc" placeholder="الوصف ..." /></p>
               </div>
-              <div className="tab">محتويات الحصة :
-                <p>
-                  <input ref={lectureLink} autoComplete='off' id="link" placeholder="رابط الفيديو (منصة اليوتيوب)..." />
-                </p>
-                <p>
-                 <input ref={content2Title}  autoComplete='off' id="uploade-title1" type="text" placeholder="عنوان المحتوى (۱) ..." />
-                </p>
-                <p>
-                  رفع محتوى
-                  <br />
-                  <input id="uploade-video" type="file" onChange={(event) => uploadFile(event)} />
-                  <div style={{ display: !finished ? null : "none" }} className="spinner-border spinner-border-sm" role="status"></div>
-                </p>
+              <br />
+              <h3>محتويات الحصة</h3>
+              <div className="accordion" id="accordionExample">
+                <div className="accordion-item">
+                  <h2 className="accordion-header" id="headingOne">
+                    <button onClick={clear} className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                      رابط فيديو يوتوب
+                    </button>
+                  </h2>
+                  <div id="collapseOne" className="accordion-collapse collapse " aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                    <div className="accordion-body">
+                      <p>
+                        <input ref={lectureLink} autoComplete='off' id="link" placeholder="https://www.youtube.com/watch?v" />
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <div className="accordion-item">
+                  <h2 className="accordion-header" id="headingTwo">
+                    <button onClick={clear} className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                      رفع فيديو من جهازك
+                    </button>
+                  </h2>
+                  <div id="collapseTwo" className="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+                    <div className="accordion-body">
+                      <input   id="uploade-video" type="file" accept="video/*" data-file="video" />
+                      
+                    </div>
+                  </div>
+                </div>
+
               </div>
-              <div className="tab">محتويات الحصة :
-                <p> <input ref={contentTitle} autoComplete='off' id="uploade-title2" type="text" placeholder="عنوان المحتوى ..." />
-                </p>
+
+              <div>
+                <br />
+                <h3>إضافة ورقة عمل</h3>
                 <p>
-                  إضافة المحتوى 
-                  <br />  <input autoComplete='off' id="uploade-paper2" type="file" onChange={(event) => uploadFile(event)} />
+
+                  <input  autoComplete='off' id="uploade-paper1" type="file"  data-file />
+                  
                 </p>
-                <p> <input ref={paperworkTitle} autoComplete='off' id="uploade-title3" type="text" placeholder="عنوان ورقة العمل  ..." />
-                </p>
+                <br />
+                {/* //! */}
+                <h3>إضافة ملفات أخرى </h3>
                 <p>
-                  إضافة ورقة عمل
-                  <br />  <input autoComplete='off' id="uploade-paper" type="file" onChange={(event) => uploadFile(event)} />
+                  <input ref={contentTitle} autoComplete='off' id="uploade-title2" type="text" placeholder="عنوان المحتوى ..." />
+                  <br /> <br />
+                  <input  autoComplete='off' id="uploade-paper2" type="file"  data-file />
+                  
                 </p>
+
               </div>
               <div style={{ overflow: 'auto' }}>
                 <div style={{ float: 'right' }}>
-                  <button className="prev-btn" type="button" id="prevBtn" >السابق</button>
-                  <button className="next-btn" type="button" id="nextBtn" >التالي</button>
+                  <button disabled = {loading} className="button" type="submit" id="submit-btn" >
+                  حفظ
+                  <div style={{ display: loading ? null : "none", marginRight: "10px" }} className="spinner-border spinner-border-sm" role="status"></div>
+                  </button>
                 </div>
               </div>
-              <div style={{ textAlign: 'center', marginTop: '10px' }}>
-                <span className="step" />
-                <span className="step" />
-                <span className="step" />
-              </div>
+
             </form>
 
 
