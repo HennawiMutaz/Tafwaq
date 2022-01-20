@@ -4,6 +4,7 @@ import TeacherSidebar from '../../components/TeacherSidebar';
 import { useLocation } from 'react-router';
 import { query, where, getDocs, collection } from 'firebase/firestore';
 import { db } from '../../fbConfig';
+import { findDOMNode } from 'react-dom';
 
 
 
@@ -15,6 +16,7 @@ function TeacherPaperwork() {
     const { classroom, lecture } = location.state
     const [list, setList] = useState([])
     const [list2, setList2] = useState([])
+    const [noSubmissionList, setNoSubmissionList] = useState([]);
     let temp = [];
     let temp2 = [];
     let counter = 1;
@@ -22,16 +24,16 @@ function TeacherPaperwork() {
     useEffect(() => {
         async function getStudents() {
             try {
-                // const q = query(collection(db, "users"), where("classroomID", "==", classroom?.id)); //! where the grades of teacher subject are displayed only.
+                const q = query(collection(db, "users"), where("classroomID", "==", classroom?.id)); //! where the grades of teacher subject are displayed only.
                 const subsQuery = query(collection(db, 'classrooms', classroom.id, 'submissions'), where("classroomID", "==", classroom.id), where("lectureID","==",lecture.id));
     
     
-                // const querySnapshot = await getDocs(q);
+                const querySnapshot = await getDocs(q);
                 const subsQuerySnapshot = await getDocs(subsQuery);
-                // querySnapshot.forEach((doc) => {
-                //     // console.log(doc.id, " => ", doc.data());
-                //     temp.push(doc.data());
-                // });
+                querySnapshot.forEach((doc) => {
+                    // console.log(doc.id, " => ", doc.data());
+                    temp.push(doc.data());
+                });
                 subsQuerySnapshot.forEach((doc) => {
                     console.log(doc.id, " => ", doc.data());
                     temp2.push(doc.data());
@@ -39,8 +41,11 @@ function TeacherPaperwork() {
             } catch (error) {
                 console.log(error);
             } finally {
-                // setList(temp);
+                setList(temp);
                 setList2(temp2);
+                setNoSubmissionList(temp.filter(({ uid: id1 }) => !temp2.some(({ studentID: id2 }) => id2 === id1)));
+                // console.log(temp.filter(({ uid: id1 }) => !temp2.some(({ studentID: id2 }) => id2 === id1)));
+                console.log(noSubmissionList);
             }
     
         }
@@ -87,6 +92,17 @@ function TeacherPaperwork() {
                                                     <td>{elem.studentNameAr}</td>
                                                     <td>{elem.lectureName}</td>
                                                     <td>{elem.studentSubmission.length !== 0 ? <a href={elem.studentSubmission}>{elem.fileName}</a> : '-' }</td>
+                                                    <td></td> 
+                                                </tr>
+                                            );
+                                        })}
+                                        {noSubmissionList.map((elem, index) => {
+                                            return (
+                                                <tr key={elem + index}> 
+                                                    <td>{counter++}</td>
+                                                    <td>{elem.firstNameAr} {elem.midNameAr} {elem.lastNameAr}</td>
+                                                    <td>{lecture.title}</td>
+                                                    <td>لا يوجد تسليم</td>
                                                     <td></td> 
                                                 </tr>
                                             );

@@ -19,10 +19,11 @@ import { db } from '../../fbConfig';
 function StudentDashboard(props) {
 
     const [lectures, setLecture] = useState([]);
+    const [loaded, setLoaded] = useState(false)
     let list = [];
 
     useEffect( async () => {
-        
+        try {
         const q = query(collection(db, "lectures"), where("classroomID", "==", props?.info?.classroomID), orderBy("createdAt", "desc"));
         const lectureSnapshot = await getDocs(q);
         lectureSnapshot.forEach((doc) => {
@@ -30,6 +31,11 @@ function StudentDashboard(props) {
             list.push(doc.data());
             setLecture(list);
         });
+        } catch (err) {
+            console.log(err);
+        } finally {
+            setLoaded(true);
+        }
         console.log(list);
 
         return () => {
@@ -63,7 +69,7 @@ function StudentDashboard(props) {
                                         );
                                     })}
                            
-                            <div style={{display: lectures.length==0 ? null : "none"}} className="container">
+                            <div style={{display: lectures.length==0 && loaded? null : "none"}} className="container">
                                 <section className="cards">
                                     <article className="no-card">
                                         <div className="row">

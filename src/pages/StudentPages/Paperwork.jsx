@@ -24,7 +24,6 @@ function Paperwork() {
        
         const submissionFile = document.getElementById("uploade");
         
-        e.target.classList.add('animate');
 
         console.log(e.target);
         
@@ -37,6 +36,8 @@ function Paperwork() {
 
         const file = submissionFile.files[0];
         if (!file) {alert("الرجاء إضافة ملف"); return;} //! IF NO FILE PROVIDED
+        e.target.classList.add('animate');
+
         const storageRef = ref(storage, `files/${lecture.classroomID}/${lecture.id}/${file.name}`);
 
         const uploadTask = uploadBytesResumable(storageRef, file);
@@ -55,8 +56,8 @@ function Paperwork() {
                 if (!submission.studentSubmission) {
                     const docRef = await addDoc(collection(db, "classrooms", lecture.classroomID, "submissions"), {
 
-                        studentNameAr: user.firstNameAr + " " + user.midNameAr + " " + user.lastNameAr,
-                        studentID: user.uid,
+                        studentNameAr: user?.firstNameAr + " " + user?.midNameAr + " " + user?.lastNameAr,
+                        studentID: user?.uid,
                         classroomID: lecture.classroomID,
                         lectureID: lecture.id,
                         lectureName: lecture.title,
@@ -77,7 +78,7 @@ function Paperwork() {
                     console.log(submission.id);
                 }
 
-               
+                document.location.reload(true);
             }
         );
         // e.target.classList.remove('animate') //! FIX ANIMATION
@@ -86,35 +87,15 @@ function Paperwork() {
 
 
     useEffect(async () => {
+        console.log(user);
 
         $("form").on("change", ".file-upload-field", function () {
             $(this).parent(".file-upload-wrapper").attr("data-text", $(this).val().replace(/.*(\/|\\)/, ''));
         });
 
-        // var animateButton = function (e) {
+        try {
 
-        //     e.preventDefault();
-        //     // e.target.classList.remove('animate');
-
-        //     e.target.classList.add('animate');
-
-        //     // e.target.classList.add('animate');
-        //     interval = setInterval(function () {
-        //         // if (true) {
-        //             e.target.classList.remove('animate')
-        //             // e.target.classList.add('animate');
-        //             console.log("done");
-        //         // }
-        //     }, 2000)
-        // }
-
-        // var classname = document.getElementsByClassName("button");
-
-        // for (var i = 0; i < classname.length; i++) {
-        //     classname[i].addEventListener('click', animateButton, false)
-        // }
-
-        const q = query(collection(db, "classrooms", lecture.classroomID, "submissions"), where("lectureID", "==", lecture.id), where("studentID", "==", user.uid));
+        const q = query(collection(db, "classrooms", lecture.classroomID, "submissions"), where("lectureID", "==", lecture.id), where("studentID", "==", user?.uid));
         const querySnapshot = await getDocs(q);
         querySnapshot.forEach((doc) => {
             // console.log(doc.id, " => ", doc.data());
@@ -123,7 +104,9 @@ function Paperwork() {
         });
         console.log(list[0]);
         console.log(submission);
-
+    } catch (err) {
+        console.log(err);
+    }
 
 
 
@@ -180,11 +163,11 @@ function Paperwork() {
                                                 <th style={{ padding: '10px' }} scope="row">حالة التسليم</th>
                                                 <td style={{ padding: '0px 20px', backgroundColor: submission?.fileName ? '#1EAE98' : null, color: submission?.fileName ? '#FFF' : null }}>{submission?.fileName ? 'مسلمة للتقييم' : 'لا يوجد تسليم'}</td>
                                             </tr>
-                                            <tr className>
+                                            <tr style={{display: submission?.fileName ? null : 'none'}}>
                                                 <th style={{ padding: '10px' }} scope="row">آخر تعديل</th>
                                                 <td>{submission?.updatedAt ? `${submission?.updatedAt?.toDate().toLocaleDateString('ar-EG') ?? ''} ` : `${submission?.createdAt?.toDate().toLocaleDateString('ar-EG') ?? ''}`}</td>
                                                 <td style={{ paddingLeft: '70px' }}>{submission?.updatedAt ? ` ${submission?.updatedAt?.toDate().toLocaleTimeString('ar-EG') ?? ''}` : `${submission?.createdAt?.toDate().toLocaleTimeString('ar-EG') ?? ''}`}</td>
-                                                <td><a style={{ color: 'green' }} href={submission?.studentSubmission}> {submission?.fileName ? submission?.fileName : '-'} </a></td>
+                                                <td><a style={{ color: 'green' }} href={submission?.studentSubmission}> {submission?.fileName} </a></td>
                                             </tr>
 
                                         </tbody>

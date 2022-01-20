@@ -13,9 +13,10 @@ function LoginPage() {
   async function handleLogin(e) {
     e.preventDefault();
     try {
-      await login(emailRef.current.value.trim(), passwordRef.current.value); 
-
-      window.location.replace('/account');
+      const b = await login(emailRef.current.value.trim(), passwordRef.current.value); 
+      // console.log(b.uid); undefined
+      
+      // window.location.replace('/account');
     } catch (error) {
       setIncorrect(true);
       console.log(error.code);
@@ -25,6 +26,8 @@ function LoginPage() {
       else if (error.code === "auth/too-many-requests") {
         setmsg();
         setmsg("حاول التسجيل لاحقاً");
+      } else {
+        setmsg("عنوان البريد الإلكتروني أو كلمة المرور خاطئين");
       }
     } 
   }
@@ -38,17 +41,17 @@ function LoginPage() {
   }, [])
 
 
- if (isloading)
-    return (
-      <Preloader hide={!isloading ? { opacity: 0, zIndex: -1 } : null} />
-    );
+//  if (isloading)
+//     return (
+//       <Preloader hide={!isloading ? { opacity: 0, zIndex: -1 } : null} />
+//     );
 
 
 
     return (
 
       <div id="login-page" className="bg-light">
-          {/* <Preloader hide={!isloading ? {opacity:0, zIndex:-1} : null} /> */}
+          <Preloader hide={!isloading ? {opacity:0, zIndex:-1} : null} />
           <div className="login-wrap d-flex align-items-center flex-wrap justify-content-center">
             <div className="container-fluid">
               <div className="row align-items-center">

@@ -10,7 +10,7 @@ import { db } from '../../fbConfig';
 function LecturePage() {
 
     const location = useLocation();
-    const { lecture, user, classroom } = location.state;
+    const { lecture, user, classroom, subject } = location.state;
 
     //TODO: ADD DELETE & EDIT BUTTON 
 
@@ -41,7 +41,15 @@ function LecturePage() {
                         <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom mt-sm-5">
                             <div className="btn-toolbar mb-2 mb-md-0">
                                 <div className="alert d-flex justify-content-end" role="alert">
-                            <button style={{marginLeft: '40px'}} className='button'>تعديل</button>
+                            <Link
+                             to="/teacher/update-lecture"
+                             state={{lecture: lecture, classroom:classroom, subject: subject}}
+                             style={{marginLeft: '40px'}} 
+                             className='button'
+
+                             >
+                                        تعديل
+                             </Link>
                             <button className='button-delete' onClick={handleDeleteLecture}>حذف</button>
                                 </div>
                             </div>
@@ -110,7 +118,7 @@ function LecturePage() {
                             <div className=" col-10 col-lg-4  col-md-12 col-sm-12 comments attch">
                                 <h2 className="center">التعليقات</h2>
                                 <div><img className="comment-img" src="/images/student.png" alt="" />
-                                    <p className="comment-text "> <span className="comment-name"> (علي أحمد)</span>  لم أفهم ما المقصود عند الدقيقة ٣٣ </p>
+                                    <p className="comment-text "> <span className="comment-name"> (علي أحمد)</span>  لم أفهم ما المقصود  </p>
                                 </div>
                                 <div><img className="comment-img" src="/images/student.png" alt="" />
                                     <p className="comment-text"> <span className="comment-name"> (رولا عيسى)</span>  شرح ممتاز كالعادة</p>

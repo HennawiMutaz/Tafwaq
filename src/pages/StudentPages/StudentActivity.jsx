@@ -87,7 +87,7 @@ function StudentActivity() {
                             <div className=" col-10 col-lg-4  col-md-12 col-sm-12 comments attch">
                                 <h2 className="center">التعليقات</h2>
                                 <div><img className="comment-img" src="/images/student.png" alt="" />
-                                    <p className="comment-text "> <span className="comment-name"> (علي أحمد)</span>  لم أفهم ما المقصود عند الدقيقة ٣٣ </p>
+                                    <p className="comment-text "> <span className="comment-name"> (علي أحمد)</span>  لم أفهم ما المقصود  </p>
                                 </div>
                                 <div><img className="comment-img" src="/images/student.png" alt="" />
                                     <p className="comment-text"> <span className="comment-name"> (رولا عيسى)</span>  شرح ممتاز كالعادة</p>

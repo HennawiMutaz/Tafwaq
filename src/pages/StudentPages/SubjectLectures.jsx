@@ -2,44 +2,36 @@ import React, { useEffect, useState } from 'react'
 import { useLocation } from 'react-router'
 import { Link } from 'react-router-dom'
 import Header from '../../components/Header'
-import TeacherSidebar from '../../components/TeacherSidebar'
+import StudentSidebar from '../../components/StudentSidebar'
 import { db } from '../../fbConfig'
 import { query, where, getDocs, collection } from 'firebase/firestore';
 
 
 
-function TeacherAllClasses(props) {
+function SubjectLectures(props) {
     const location = useLocation()
-    const { classroom, user } = location.state
+    const { classroom, user, subject } = location.state
 
-    const [subject, setSubject] = useState({ id: "" })
-    const [lectures, setLectures] = useState([])
+    
     let list = [];
-    let lecs = [];
+    const [lectures, setLectures] = useState([])
+    const [loaded, setLoaded] = useState(false);
+
     useEffect(async () => {
-        // console.log(classroom);
-        // console.log(user);
-
-        const q = query(collection(db, "subjects"), where("classroomID", "==", classroom?.id), where("name", "==", user?.subject));
-        const subjectSnapshot = await getDocs(q);
-        subjectSnapshot.forEach((doc) => {
-            // console.log(doc.id, " => ", doc.data());
-            list.push(doc.data());
-            setSubject(list[0]);
-
-        });
-        console.log(list[0]);
-        console.log(subject);
-
-        const q2 = query(collection(db, "lectures"), where("subjectID", "==", list[0].id));
-        const lectureSnapshot = await getDocs(q2);
-        lectureSnapshot.forEach((doc) => {
-            console.log(doc.id, " => ", doc.data());
-            lecs.push(doc.data());
-            setLectures(lecs);
-        });
-        console.log(lecs);
-        console.log(lectures);
+        console.log(user);
+        try {
+            const q = query(collection(db, "lectures"), where("subjectID", "==", subject?.id));
+            const subjectSnapshot = await getDocs(q);
+            subjectSnapshot.forEach((doc) => {
+                console.log(doc.id, " => ", doc.data());
+                list.push(doc.data());
+            });
+        } catch (err) {
+            console.log(err);
+        } finally {
+            setLectures(list);
+            setLoaded(true)
+        }
 
     }, [])
 
@@ -49,36 +41,14 @@ function TeacherAllClasses(props) {
         <div>
             <link rel="stylesheet" href="/styles/studentpage.css" />
             <Header />
-            <TeacherSidebar />
+            <StudentSidebar />
             <div className="container-fluid">
                 <div className="row mt-5">
                     <main className="col-md-9 ms-sm-auto col-lg-10 px-md-4">
                         <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom mt-sm-5">
-                            <h1 className="h2">{classroom?.name}</h1>
+                            <h1 className="h2"> جميع الحصص - {subject.nameAr}</h1>
                             <div className="btn-toolbar mb-2 mb-md-0">
-                                <div className="alert d-flex justify-content-end" role="alert">
-                                    <Link
-                                        to="/teacher/add-material"
-                                        className="ms-3 button"
-                                        state={{ user: user, subject: subject, classroom: classroom }}
-                                    >
-                                        <span className="mx-1"> إضافة حصة </span>
-                                    </Link>
-                                    <Link
-                                        to="/teacher/student-list"
-                                        className="ms-3 button"
-                                        state={{ user: user, classroom: classroom }}
-                                    >
-                                        <span className="mx-1"> قائمة الطلاب </span>
-                                    </Link>
-                                    <Link
-                                        to="/teacher/student-gradelist"
-                                        className="ms-3 button"
-                                        state={{ user: user, subject: subject, classroom: classroom}}
-                                    >
-                                        <span className="mx-1"> العلامات  </span>
-                                    </Link>
-                                </div>
+                                
                             </div>
                         </div>
                     </main>
@@ -89,12 +59,10 @@ function TeacherAllClasses(props) {
                                     {lectures.map((elem, index) => {
                                         return (
                                             <Link
-                                                to="/teacher/all-classes/class"
+                                                to="/account/class"
                                                 state={{
                                                     lecture: elem,
-                                                    classroom: classroom,
                                                     user: user,
-                                                    subject: subject
                                                 }}
                                                 key={elem.title || index} className="data-card col-xl-3 col-sm-6">
                                                 <h3> {elem.title} </h3>
@@ -110,6 +78,20 @@ function TeacherAllClasses(props) {
                                     })}
                                     
                                 </div>
+                                <div style={{display: lectures.length==0 && loaded? null : "none"}} className="container">
+                                <section className="cards">
+                                    <article className="no-card">
+                                        <div className="row">
+                                            <div className="col-6 col-lg-12">
+                                                <img src="/images/box.png" width={200} height={200} />
+                                            </div>
+                                            <div className="col-6 col-lg-12 emp-header">
+                                                <h2>لا يوجد حصص جديدة</h2>
+                                            </div>
+                                        </div>
+                                    </article>
+                                </section>
+                            </div>
                                 {/* partial */}
                             </div>
 
@@ -121,4 +103,4 @@ function TeacherAllClasses(props) {
     )
 }
 
-export default TeacherAllClasses
+export default SubjectLectures
