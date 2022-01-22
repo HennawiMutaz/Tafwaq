@@ -3,7 +3,7 @@ import Header from '../../components/Header'
 import { useLocation } from 'react-router'
 import { Link } from 'react-router-dom';
 import TeacherSidebar from '../../components/TeacherSidebar';
-import { doc, deleteDoc } from "firebase/firestore";
+import { doc, deleteDoc, writeBatch, where, getDocs, collection, query } from "firebase/firestore";
 import { db } from '../../fbConfig';
 
 
@@ -12,10 +12,10 @@ function LecturePage() {
     const location = useLocation();
     const { lecture, user, classroom, subject } = location.state;
 
-    //TODO: ADD DELETE & EDIT BUTTON 
+    
 
 
-    function handleDeleteLecture() {
+    async function handleDeleteLecture() {
         if(window.confirm("هل أنت متأكد من حذف الحصة كلياً ؟") == true) {
             
 
@@ -23,6 +23,21 @@ function LecturePage() {
             deleteDoc(doc(db, "lectures", lecture.id))
             .then(() => console.log("deleted lecture from firestore"))
             .catch((error) => console.log(error))
+            
+            try {
+                const q = query(collection(db, "classrooms", lecture?.classroomID, "submissions"), where("lectureID", "==", lecture?.id));
+                const querySnapshot = await getDocs(q);
+                querySnapshot.forEach((doc) => {
+                    console.log(doc.id, " => ", doc.data());
+                    console.log(doc.ref);
+                    deleteDoc(doc.ref)
+                    .then(console.log("removed"))
+                    .catch(err => console.log(err))
+                });
+            } catch (error) {
+                console.log(error);
+            } 
+            
 
             alert("تم حذف الحصة بنجاح");
             window.history.go(-1);
@@ -84,7 +99,7 @@ function LecturePage() {
                         <iframe className="center" width="420" height="315" src={lecture.link} frameBorder="0" allowFullScreen></iframe>
                         <div className="row">
                             <div className=" col-lg-7  col-md-12 col-sm-12">
-                                <a href={lecture.paperworkURL} style={{ display: lecture.contentURL.length == 0 ? "none" : null }}>
+                                <a href={lecture.contentURL} style={{ display: lecture.contentURL.length == 0 ? "none" : null }}>
                                     <h5 className="attch">
                                         <svg xmlns="http://www.w3.org/2000/svg" width={16} height={16} fill="currentColor" className="bi bi-eye-fill" viewBox="0 0 16 16">
                                             <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z" />

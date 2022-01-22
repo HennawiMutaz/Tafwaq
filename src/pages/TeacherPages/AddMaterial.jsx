@@ -16,7 +16,12 @@ function AddMaterial() {
   async function submitForm(e) {
 
     e.preventDefault();
-
+    console.log(lectureTitle.current.value)
+    console.log(lectureDesc.current.value);
+    if (!lectureTitle.current.value || !lectureDesc.current.value) {
+      alert("يرجى إدخال عنوان و وصف الحصة");
+      return;
+    }
 
     const allFiles = document.querySelectorAll('[data-file]');
 
@@ -98,12 +103,12 @@ function AddMaterial() {
             console.log("video url updated");
           }
           else if (allFiles[i].id === "uploade-paper1") {
-            updateDoc(docRef, { contentURL: url }, { merge: true });
-            console.log("content url updated");
+            updateDoc(docRef, { paperworkURL: url }, { merge: true });
+            console.log("paperwork url updated");
           }
           else if (allFiles[i].id === "uploade-paper2") {
-            updateDoc(docRef, { paperworkURL: url }, { merge: true });
-            console.log("paprework url updated");
+            updateDoc(docRef, { contentURL: url }, { merge: true });
+            console.log("contentURL url updated");
           }
           console.log(numOfCompletedFiles);
           if (numOfCompletedFiles == (allFiles.length - numOfemptyFiles)) {
@@ -161,7 +166,7 @@ function clear(f) {
             </div>
           </main>
           <main className="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-          {/* //TODO: DISPLAYS AT WRONG TIMING */}
+          
             <div id='success' style={{ display: done ?  null :'none', textAlign: 'center', marginTop: '10px' }}> 
               <h3>تم إضافة الحصة بنجاح</h3>
               <button

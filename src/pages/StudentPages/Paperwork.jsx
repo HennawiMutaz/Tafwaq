@@ -68,6 +68,7 @@ function Paperwork() {
                         subjectNameAr: lecture.subjectNameAr,
                         createdAt: serverTimestamp(),
                         fileName: file.name,
+                        grade: "",
                     });
                     updateDoc(docRef, { id: docRef.id }, { merge: true });
 

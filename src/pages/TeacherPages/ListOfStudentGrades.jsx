@@ -23,25 +23,26 @@ function ListOfStudentGrades() {
     useEffect(() => {
         async function getStudents() {
             try {
-                // const q = query(collection(db, "users"), where("classroomID", "==", classroom?.id)); //! where the grades of teacher subject are displayed only.
-                const subsQuery = query(collection(db, 'classrooms', classroom.id, 'submissions'), where("classroomID", "==", classroom.id));
+                // const q = query(collection(db, "users"), where("classroomID", "==", classroom?.id)); 
+                const subsQuery = query(collection(db, 'classrooms', classroom.id, 'submissions'), where("classroomID", "==", classroom.id), where("subjectID", "==", subject.id));
 
 
                 // const querySnapshot = await getDocs(q);
-                const subsQuerySnapshot = await getDocs(subsQuery);
                 // querySnapshot.forEach((doc) => {
                 //     // console.log(doc.id, " => ", doc.data());
                 //     temp.push(doc.data());
                 // });
+                const subsQuerySnapshot = await getDocs(subsQuery);
                 subsQuerySnapshot.forEach((doc) => {
                     console.log(doc.id, " => ", doc.data());
+                    console.log(doc.ref);
                     temp2.push(doc.data());
                 });
             } catch (error) {
                 console.log(error);
             } finally {
-                // setList(temp);
                 setList2(temp2);
+                // setList(temp.filter(({ uid: id1 }) => !temp2.some(({ studentID: id2 }) => id2 === id1)));
             }
 
         }
@@ -53,7 +54,7 @@ function ListOfStudentGrades() {
     return (
         <div>
             <Header />
-            {user?.type === "teacher" ? <TeacherSidebar /> : (user?.type === "student" ? <StudentSidebar /> : <SideBar />)}
+            <TeacherSidebar />
 
 
 
@@ -89,10 +90,11 @@ function ListOfStudentGrades() {
                                                     <td>{elem.studentNameAr}</td>
                                                     <td>{elem.lectureName}</td>
                                                     <td>{elem.studentSubmission.length != 0 ? <a href={elem.studentSubmission}>{elem.fileName}</a> : '-' }</td>
-                                                    <td></td> 
+                                                    <td>10 / {elem.grade}</td> 
                                                 </tr>
                                             );
                                         })}
+                                       
                                     </tbody>
                                 </table>
                             </div>

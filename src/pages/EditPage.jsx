@@ -5,6 +5,8 @@ import { useLocation } from 'react-router';
 import {
     collection,
     addDoc,
+    where,
+    getDocs,
     updateDoc,
     doc,
     deleteDoc,
@@ -143,17 +145,23 @@ function EditPage() {
 
     }
 
-    function handleDeleteUser() {
+    async function handleDeleteUser() {
         if(window.confirm("هل أنت متأكد من حذف المستخدم كلياً ؟") == true) {
-            //delete from auth
-            // deleteUser(auth,user.uid)
-            // .then(() => console.log("deleted user from auth"))
-            // .catch((error) => console.log(error))
+           
 
             //delete from firestore
             deleteDoc(doc(db, "users", user.uid))
             .then(() => console.log("deleted user from firestore"))
             .catch((error) => console.log(error))
+
+                const q = query(collection(db, "classrooms", user.classroomID, "submissions"), where("studentID", "==", user.uid));
+                const querySnapshot = await getDocs(q);
+                querySnapshot.forEach((doc) => {
+                    console.log(doc.id, " => ", doc.data());
+                    deleteDoc(doc.ref)
+                    .then(console.log("removed"))
+                    .catch(err => console.log(err))
+                });
 
             alert("تم حذف المستخدم بنجاح");
             window.history.go(-1);

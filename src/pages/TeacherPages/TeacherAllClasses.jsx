@@ -36,8 +36,8 @@ function TeacherAllClasses(props) {
         lectureSnapshot.forEach((doc) => {
             console.log(doc.id, " => ", doc.data());
             lecs.push(doc.data());
-            setLectures(lecs);
         });
+        setLectures(lecs);
         console.log(lecs);
         console.log(lectures);
 

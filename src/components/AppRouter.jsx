@@ -56,13 +56,24 @@ function AppRouter() {
         
         if (docSnap.exists()) {
             console.log("Document data:", docSnap.data());
-            setAllow(true);
+            console.log(docSnap.data().classroomsIDs);
+            if (!docSnap.data().classroomID && docSnap.data().type==="student" || docSnap.data().classroomsIDs.length === 0 && docSnap.data().type==="teacher") {
+                console.log(1);
+                logout();
+                setAllow(false);
+                // window.location.replace('/contact-page');
+                // return;
+            } else {
+                console.log(2);
+                setAllow(true);
+            }
           } else {
             // doc.data() will be undefined in this case
+            console.log(3);
             console.log("No such document!");
             logout();
             setAllow(false);
-            window.location.replace('/contact-page');
+            // window.location.replace('/contact-page');
           }
         
         
@@ -71,7 +82,7 @@ function AppRouter() {
         return () => {
             
         }
-    }, [auth])
+    }, [auth, allow])
 
     return (
         <>

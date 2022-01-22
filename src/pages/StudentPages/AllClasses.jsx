@@ -29,8 +29,8 @@ function AllClasses() {
         lectureSnapshot.forEach((doc) => {
             console.log(doc.id, " => ", doc.data());
             lecs.push(doc.data());
-            setLectures(lecs);
         });
+        setLectures(lecs);
 
 
         return () => {

@@ -5,52 +5,16 @@ import SideBar from '../components/SideBar'
 import { query, where, getDocs, collection } from 'firebase/firestore';
 import { Link } from 'react-router-dom';
 
-
+//!MEMBERS OF CLASSROOMS NOT SHOWING
 function ClassroomList() {
     const user = useAuth();
     // const [isloading, setIsloading] = useState(true);
     const [list, setList] = useState([])
+    const [mem, setMem] = useState([])
     let temp = [];
     let counter = 1;
-    let members = 0;
-    function createTable(elem) {
-        return (
-            <tr key={elem + Math.random()}>
-                <th scope="row">{counter++}</th>
-                <td>{elem.name}</td>
-                <td className='text-center'>{elem.members}</td>
-                <td> 
-                <Link 
-                  to="/account/edit-classroom"
-                  state={{classroom: elem}}
-                  style={{color: "#000"}}
-                  >
-                    <i className="fas fa-edit icon-hover"></i> 
-                  </Link>
-                  </td>
-                
-            </tr>
-        );
-    }
-
-    async function countMembers(elem) {
-        try {
-            const q = query(collection(db, "users"), where("classroomID", "==", elem?.id));
-            
-            const querySnapshot = await getDocs(q);
-            querySnapshot.forEach((doc) => {
-                // console.log(doc.id, " => ", doc.data());
-                console.log(elem.name,elem.id,"___",doc.data().classroomID);
-                members++;
-            }); 
-        } catch (error) {
-            console.log(error);
-        } finally {
-            elem.members = members;
-            console.log("members=",members);
-            members = 0;
-        }   
-    }
+    let members = [];
+    
 
     useEffect(() => {
         async function getClassrooms() {
@@ -66,12 +30,21 @@ function ClassroomList() {
                 console.log(error);
             } finally {
                 setList(temp);
-                temp.map(elem => countMembers(elem));
+                
+                for (let index = 0; index < temp.length; index++) {
+                        const q = query(collection(db, "users"), where("classroomID", "==", temp[index]?.id));
+                        const querySnapshot = await getDocs(q);            
+                        members.push(querySnapshot.docs.length);
+                }
+                setMem(members);
             }
-            
+
         }
         return getClassrooms();
     }, [])
+
+   
+    
 
 
     return (
@@ -106,16 +79,34 @@ function ClassroomList() {
                                 <table className="table table-striped table-hover table-bordered">
                                     <thead>
                                         <tr>
-                                            <th style={{width:"50px"}} scope="col">#</th>
-                                            <th style={{width:"400px"}} scope="col">اسم الصف</th>
-                                            <th style={{width:"200px"}} className='text-center' scope="col">عدد الطلاب</th>
-                                            <th style={{width:"50px"}} scope="col"></th>
+                                            <th style={{ width: "50px" }} scope="col">#</th>
+                                            <th style={{ width: "400px" }} scope="col">اسم الصف</th>
+                                            <th style={{ width: "200px" }} className='text-center' scope="col">عدد الطلاب</th>
+                                            <th style={{ width: "50px" }} scope="col"></th>
                                         </tr>
                                     </thead>
                                     {/* <div style={{ display: !list.length ? null : "none" }} className="p-5 spinner-border spinner-border-lg" role="status"></div> */}
 
                                     <tbody>
-                                        {list.map(createTable)}
+                                        {list.map((elem, index) => {
+                                            return (
+                                                <tr key={elem + Math.random()}>
+                                                    <th scope="row">{counter++}</th>
+                                                    <td>{elem.name}</td>
+                                                    <td className='text-center'>{mem[index]}</td>
+                                                    <td>
+                                                        <Link
+                                                            to="/account/edit-classroom"
+                                                            state={{ classroom: elem }}
+                                                            style={{ color: "#000" }}
+                                                        >
+                                                            <i className="fas fa-edit icon-hover"></i>
+                                                        </Link>
+                                                    </td>
+
+                                                </tr>
+                                            );
+                                        })}
                                     </tbody>
                                 </table>
                             </div>

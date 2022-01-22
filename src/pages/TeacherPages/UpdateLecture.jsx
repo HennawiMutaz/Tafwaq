@@ -47,8 +47,11 @@ function UpdateLecture() {
   async function submitForm(e) {
 
     e.preventDefault();
-
-
+    if (!lectureTitle.current.value || !lectureDesc.current.value) {
+      alert("يرجى إدخال عنوان و وصف الحصة");
+      return;
+    }
+    const lecRef = doc(collection(db, 'lectures'),lecture.id);
     const allFiles = document.querySelectorAll('[data-file]');
 
 
@@ -56,10 +59,10 @@ function UpdateLecture() {
     console.log(allFiles[0].files.length);
    
 
-    if (lectureLink.current.value != '' && !lectureLink.current.value.startsWith('https://www.youtube.com/watch?v=')) {
-      alert("الرجاء إدخال رابط يوتوب صحيح");
-      return;
-    }
+    // if (lectureLink.current.value != '' && !lectureLink.current.value.startsWith('https://www.youtube.com/watch?v=')) {
+    //   alert("الرجاء إدخال رابط يوتوب صحيح");
+    //   return;
+    // }
 
     if (allFiles[0].files.length != 0 || lectureLink.current.value != '') {
       
@@ -70,19 +73,28 @@ function UpdateLecture() {
     if (lectureLink.current.value != "") { //! if youtube link provided
       lectureLink.current.value = lectureLink.current.value.replace("watch?v=", "embed/");
     }
-    // newLecture.link = lectureLink.current.value;
+
+    updateDoc(lecRef, { link: lectureLink.current.value }, { merge: true });
 
 
     
-    // //* ADD TO FIRESTORE
-    // const docRef = await addDoc(collection(db, "lectures"), newLecture);
-    // console.log("Document written with ID: ", docRef.id);
-    
+ 
      
     let numOfCompletedFiles = 0
     let numOfemptyFiles = 0;
     //* Create a root reference
     const storage = getStorage();
+    if (!allFiles[0].files.length && !allFiles[1].files.length && !allFiles[2].files.length) {
+      updateDoc( lecRef, {
+        description: lectureDesc.current.value,
+        title: lectureTitle.current.value,
+        updatedAt: serverTimestamp(),
+        contentTitle: contentTitle.current.value,
+        }, 
+        { merge: true });
+        setDone(true);
+        setLoading(false);
+    }
     for (let i = 0; i < allFiles.length; i++) {
       const file = allFiles[i].files[0];
       console.log(i);
@@ -105,19 +117,26 @@ function UpdateLecture() {
           const url = await getDownloadURL(uploadTask.snapshot.ref);
           console.log(url);
           if (allFiles[i].id === "uploade-video" && document.getElementById("uploade-video").files.length !== 0) {
-            updateDoc(lecture.id, { link: url }, { merge: true });
+            updateDoc(lecRef, { link: url }, { merge: true });
             console.log("video url updated");
           }
           else if (allFiles[i].id === "uploade-paper1") {
-            updateDoc(lecture.id, { contentURL: url }, { merge: true });
+            updateDoc(lecRef, { contentURL: url }, { merge: true });
             console.log("content url updated");
           }
           else if (allFiles[i].id === "uploade-paper2") {
-            updateDoc(lecture.id, { paperworkURL: url }, { merge: true });
+            updateDoc(lecRef, { paperworkURL: url }, { merge: true });
             console.log("paprework url updated");
           }
           console.log(numOfCompletedFiles);
           if (numOfCompletedFiles === (allFiles.length - numOfemptyFiles)) {
+            updateDoc( lecRef, {
+              description: lectureDesc.current.value,
+              title: lectureTitle.current.value,
+              updatedAt: serverTimestamp(),
+              contentTitle: contentTitle.current.value,
+              }, 
+              { merge: true });
             setDone(true);
             setLoading(false);
           }
@@ -158,7 +177,7 @@ function clear(f) {
             <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom mt-sm-5">
               <h1 className="h2">تعديل الحصة </h1>
               <div className="btn-toolbar mb-2 mb-md-0">
-              <button className='button-delete' onClick={() => window.history.go(-1)}>إلغاء</button>
+              <button style={{display: done ? 'none' : null}} className='button-delete' onClick={() => window.history.go(-1)}>إلغاء</button>
 
               </div>
             </div>
@@ -167,12 +186,12 @@ function clear(f) {
           
             <div id='success' style={{ display: done ?  null :'none', textAlign: 'center', marginTop: '10px' }}> 
               <h3>تم تعديل الحصة بنجاح</h3>
-              <button
+              <a
                 className="button"
-                onClick={() => window.history.go(-1)}
+                href="/account"
               >
-                العودة إلى الحصص
-              </button>
+                العودة  
+              </a>
             </div>
             <form id="regForm" onSubmit={submitForm} style={{ display: !done ?  null :'none'}}>
               <div >
@@ -205,7 +224,10 @@ function clear(f) {
                   <div id="collapseTwo" className="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
                     <div className="accordion-body">
                       <input   id="uploade-video" type="file" accept="video/*" data-file="video" />
-                      
+                      <div style={{display: !lecture.link.includes('youtube.com') ? null : 'none'}} className='container mt-4'>
+                        <i class="far fa-file-video"></i>
+                        <a style={{marginRight: '10px'}} href={lecture.link}>ملف الفيديو</a>
+                      </div>
                     </div>
                   </div>
                 </div>
