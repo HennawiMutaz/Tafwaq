@@ -47,42 +47,41 @@ function AppRouter() {
 
 
 
-    useEffect(async () => {
+    // useEffect(async () => {
         
-        console.log(auth?.uid)
-        if (!auth) return;
-        const docRef = doc(db, 'users', auth?.uid);
-        const docSnap = await getDoc(docRef);
+    //     console.log(auth?.uid)
+    //     if (!auth) return;
+    //     const docRef = doc(db, 'users', auth?.uid);
+    //     const docSnap = await getDoc(docRef);
         
-        if (docSnap.exists()) {
-            console.log("Document data:", docSnap.data());
-            console.log(docSnap.data().classroomsIDs);
-            if (!docSnap.data().classroomID && docSnap.data().type==="student" || docSnap.data().classroomsIDs.length === 0 && docSnap.data().type==="teacher") {
-                console.log(1);
-                logout();
-                setAllow(false);
-                // window.location.replace('/contact-page');
-                // return;
-            } else {
-                console.log(2);
-                setAllow(true);
-            }
-          } else {
-            // doc.data() will be undefined in this case
-            console.log(3);
-            console.log("No such document!");
-            logout();
-            setAllow(false);
-            // window.location.replace('/contact-page');
-          }
+    //     if (docSnap.exists()) {
+    //         console.log("Document data:", docSnap.data());
+    //         console.log(docSnap.data().classroomsIDs);
+    //         console.log(docSnap.data().classroomID);
+    //         if ((!docSnap.data().classroomID && docSnap.data().type==="student") || (docSnap.data().classroomsIDs?.length === 0 && docSnap.data().type==="teacher")) {
+    //             console.log(1);
+    //             setAllow(false);
+    //             // window.location.replace('/contact-page');
+    //             // return;
+    //         } else {
+    //             console.log(2);
+    //             setAllow(true);
+    //         }
+    //       } else {
+    //         // doc.data() will be undefined in this case
+    //         console.log(3);
+    //         console.log("No such document!");
+    //         setAllow(false);
+    //         // window.location.replace('/contact-page');
+    //       }
         
         
 
 
-        return () => {
+    //     return () => {
             
-        }
-    }, [auth, allow])
+    //     }
+    // }, [auth, allow])
 
     return (
         <>
@@ -91,7 +90,7 @@ function AppRouter() {
                     <Route exact path='/' element={<HomePage />} />
                     <Route exact path='/contact-page' element={<ContactSchoolPage />} />
                     
-                    <Route exact path='/login' element={ auth ? (!allow ? <Navigate to="/contact-page" /> : <Navigate to="/account" replace={true} /> ) : <LoginPage />  } />
+                    <Route exact path='/login' element={ auth ? <Navigate to="/account" replace={true} /> : <LoginPage />  } />
                     <Route exact path='/account' element={ !auth ? <Navigate to="/login" replace={true} /> : <Account /> } />
                     <Route exact path='/account/studentlist' element={ <StudentList /> } />
                     <Route exact path='/account/addstudent' element={ <AddStudent /> } />

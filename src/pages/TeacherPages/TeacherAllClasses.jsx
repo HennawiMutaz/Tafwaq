@@ -116,6 +116,20 @@ function TeacherAllClasses(props) {
                         </div>
                     </main>
                 </div>
+                <div style={{display: lectures.length==0 ? null : "none"}} className="container">
+                                <section className="cards">
+                                    <article className="no-card">
+                                        <div className="row">
+                                            <div className="col-6 col-lg-12">
+                                                <img src="/images/box.png" width={200} height={200} />
+                                            </div>
+                                            <div className="col-6 col-lg-12 emp-header">
+                                                <h2>لا يوجد حصص جديدة</h2>
+                                            </div>
+                                        </div>
+                                    </article>
+                                </section>
+                            </div>
             </div>
         </div>
     )

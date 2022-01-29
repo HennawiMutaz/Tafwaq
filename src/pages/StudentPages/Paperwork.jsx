@@ -82,7 +82,7 @@ function Paperwork() {
                 document.location.reload(true);
             }
         );
-        // e.target.classList.remove('animate') //! FIX ANIMATION
+        
 
     }
 
@@ -160,7 +160,7 @@ function Paperwork() {
                                 <div className="box py-3 boxaligncenter submissionsummarytable">
                                     <table className="generaltable">
                                         <tbody>
-                                            <tr className>
+                                            <tr>
                                                 <th style={{ padding: '10px' }} scope="row">حالة التسليم</th>
                                                 <td style={{ padding: '0px 20px', backgroundColor: submission?.fileName ? '#1EAE98' : null, color: submission?.fileName ? '#FFF' : null }}>{submission?.fileName ? 'مسلمة للتقييم' : 'لا يوجد تسليم'}</td>
                                             </tr>
@@ -170,7 +170,10 @@ function Paperwork() {
                                                 <td style={{ paddingLeft: '70px' }}>{submission?.updatedAt ? ` ${submission?.updatedAt?.toDate().toLocaleTimeString('ar-EG') ?? ''}` : `${submission?.createdAt?.toDate().toLocaleTimeString('ar-EG') ?? ''}`}</td>
                                                 <td><a style={{ color: 'green' }} href={submission?.studentSubmission}> {submission?.fileName} </a></td>
                                             </tr>
-
+                                            <tr style={{display: submission?.grade ? null : 'none'}}>
+                                                <th style={{ padding: '10px' }} scope="row">العلامة</th>
+                                                <td style={{ padding: '0px 20px'}}>10 / {submission?.grade}</td>
+                                            </tr>
                                         </tbody>
                                     </table>
                                 </div>

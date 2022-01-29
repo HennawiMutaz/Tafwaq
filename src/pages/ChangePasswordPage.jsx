@@ -71,6 +71,20 @@ function ChangePasswordPage() {
     });
   }
 
+  function validate(elem1, elem2, elem3, elem4) {
+
+    if (elem1.classList.contains("valid") && elem2.classList.contains("valid") && elem3.classList.contains("valid") && elem4.classList.contains("valid") && (newPassword.current.value === confirmPassword.current.value) && oldPassword.current.value !== "") {
+      setIsValid(true);
+    }
+    else {
+      setIsValid(false);
+    }
+
+  }
+
+
+
+  
 
   useEffect(() => {
 
@@ -91,22 +105,25 @@ function ChangePasswordPage() {
       }
     }
 
+    
     return getUser();
   }, [currentUser])
 
-    var myInput = document.getElementById("psw");
-    var confirm = document.getElementById("confirm");
-    var oldpsw = document.getElementById("oldpsw");
-    var letter = document.getElementById("letter");
-    var capital = document.getElementById("capital");
-    var number = document.getElementById("number");
-    var length = document.getElementById("length");
-   
 
-    // When the user clicks on the password field, show the message box
-      
+  window.onload = () => {
+    
+    
     try {
-
+      
+      var myInput = document.getElementById("psw");
+      var confirm = document.getElementById("confirm");
+      var oldpsw = document.getElementById("oldpsw");
+      var letter = document.getElementById("letter");
+      var capital = document.getElementById("capital");
+      var number = document.getElementById("number");
+      var length = document.getElementById("length");
+      
+      // When the user clicks on the password field, show the message box
       myInput.onfocus = function () {
         document.getElementById("message").style.display = "block";
       }
@@ -196,29 +213,11 @@ function ChangePasswordPage() {
       console.log(error);
     }
 
-
-  function validate(elem1, elem2, elem3, elem4) {
-
-    if (elem1.classList.contains("valid") && elem2.classList.contains("valid") && elem3.classList.contains("valid") && elem4.classList.contains("valid") && (newPassword.current.value === confirmPassword.current.value) && oldPassword.current.value !== "") {
-      setIsValid(true);
-    }
-    else {
-      setIsValid(false);
-    }
-
   }
+ 
 
 
 
-  // render
-
-  if (!info) {
-    return (
-      <div>
-
-      </div>
-    )
-  }
 
 
   return (

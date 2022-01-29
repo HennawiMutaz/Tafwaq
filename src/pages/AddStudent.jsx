@@ -146,6 +146,7 @@ function AddStudent() {
                         type: "student",
                         createdAt: serverTimestamp(),
                         nationalNumber: nationalNumber.current.value.trim(), 
+                        classroomID: '',
                     };
                     await setDoc(doc(db, "users", user.uid), newUser);
 

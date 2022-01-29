@@ -70,7 +70,6 @@ function AddMaterial() {
     const docRef = await addDoc(collection(db, "lectures"), newLecture);
     console.log("Document written with ID: ", docRef.id);
     updateDoc(docRef, { id: docRef.id }, { merge: true });
-    
      
     let numOfCompletedFiles = 0
     let numOfemptyFiles = 0;
@@ -119,6 +118,13 @@ function AddMaterial() {
         }
         );
       } //end of for loop
+
+      if (numOfemptyFiles === 3) {
+        setDone(true);
+        setLoading(false);
+        return;
+      }
+      
 
     } else {
       alert("الرجاء إدخال رابط الفيديو أو رفع  ملف الفيديو")

@@ -30,6 +30,9 @@ function TeacherPaperwork() {
         if (!gradeValue.current.value) { 
             alert ("يرجى إدخال العلامة")
             return;
+        } else if (isNaN(gradeValue.current.value)) {
+            alert ("يرجى إدخال أرقام فقط")
+            return;
         } else if (gradeValue.current.value > 10 || gradeValue.current.value < 0 ) { //* Range of grade is from 0 to 10
             alert ("يرجى إدخال علامة بين الصفر و العشرة")
             return;
@@ -123,7 +126,7 @@ function TeacherPaperwork() {
                                                                 <button onClick={() => setEdit(false)} className='col mx-3 btn btn-outline-danger'>إلغاء</button>
                                                             </div>
                                                             <div style={{display: !edit ? null : 'none'}}>
-                                                                10 / <p style={{display: 'inline-block'}}> {!elem.grade ? 'لم يتم التقييم' : elem.grade } </p> 
+                                                                 <p style={{display: 'inline-block'}}> 10 / {!elem.grade ? 'لم يتم التقييم' : elem.grade } </p> 
                                                                 <i onClick={() => setEdit(!edit)}  className="fas fa-edit icon-hover ms-3"></i>
                                                             </div>
                                                         </td>

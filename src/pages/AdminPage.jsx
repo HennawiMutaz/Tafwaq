@@ -6,12 +6,14 @@ import SideBar from '../components/SideBar';
 import Header from '../components/Header';
 import StudentDashboard from './StudentPages/StudentDashboard';
 import TeacherDashboard from './TeacherPages/TeacherDashboard';
+import ContactSchoolPage from './ContactSchoolPage';
 
 function Account() {
   // const user = auth.currentUser;
   const user = useAuth();
   const [info, setInfo] = useState(null);
   const [isloading, setIsloading] = useState(true);
+  const [notExist, setNotExist] = useState(false);
 
 
   // Triggers at load
@@ -21,13 +23,15 @@ function Account() {
         const docRef = doc(db, "users", user.uid);
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {
-          // console.log("Document data:", docSnap.data());
+          console.log("Document data:", docSnap.data());
           const admin = docSnap.data();
           setInfo(admin);
           setIsloading(false);
         } else {
           // doc.data() will be undefined in this case
           console.log("No such document!");
+          setNotExist(true);
+          setIsloading(false);
         }
       } catch (error) {
         console.log(error);
@@ -42,7 +46,7 @@ function Account() {
       <Preloader hide={!isloading ? { opacity: 0, zIndex: -1 } : null} />
     );
 
-  if (!isloading && info.type === "admin")
+  if (!isloading && info?.type === "admin")
     return (
       <div>
 
@@ -72,19 +76,40 @@ function Account() {
       </div>
     );
   
-  if (!isloading && info.type === "student" )
+  if (!isloading && info?.type === "student" && info?.classroomID)
   return (
     <div>
      <StudentDashboard info={info} />
     </div>
   )
+  if (!isloading && info?.type === "student" && info?.classroomID === '') {
+    return (
+    <div>
+     <ContactSchoolPage />
+    </div>
+  )
+  }
 
-  if (!isloading && info.type === "teacher" )
+  if (!isloading && info?.type === "teacher" && info?.classroomsIDs.length !== 0)
   return (
     <div>
      <TeacherDashboard info={info} />
     </div>
   )
+   if (!isloading && info?.type === "teacher" && info?.classroomsIDs.length === 0) {
+    return (
+    <div>
+     <ContactSchoolPage />
+    </div>
+  )
+  }
+  if (notExist) {
+    return (
+      <div>
+       <ContactSchoolPage />
+      </div>
+    )
+  }
 
   
 }

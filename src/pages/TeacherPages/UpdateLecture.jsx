@@ -92,6 +92,7 @@ function UpdateLecture() {
         contentTitle: contentTitle.current.value,
         }, 
         { merge: true });
+        
         setDone(true);
         setLoading(false);
     }
@@ -225,7 +226,7 @@ function clear(f) {
                     <div className="accordion-body">
                       <input   id="uploade-video" type="file" accept="video/*" data-file="video" />
                       <div style={{display: !lecture.link.includes('youtube.com') ? null : 'none'}} className='container mt-4'>
-                        <i class="far fa-file-video"></i>
+                        <i className="far fa-file-video"></i>
                         <a style={{marginRight: '10px'}} href={lecture.link}>ملف الفيديو</a>
                       </div>
                     </div>

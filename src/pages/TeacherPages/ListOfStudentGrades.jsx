@@ -50,7 +50,7 @@ function ListOfStudentGrades() {
     }, [])
 
 
-    
+
     return (
         <div>
             <Header />
@@ -72,7 +72,7 @@ function ListOfStudentGrades() {
                     <main className="col-md-9 ms-sm-auto col-lg-10 px-md-4">
                         <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
                             <div className="col-10 mx-auto mt-5">
-                                <table className="table table-striped table-hover table-bordered">
+                                <table className="table table-striped table-hover table-bordered" style={{display: list2.length === 0 ? 'none' : null}}>
                                     <thead>
                                         <tr>
                                             <th scope="col">#</th>
@@ -85,18 +85,31 @@ function ListOfStudentGrades() {
                                     <tbody>
                                         {list2.map((elem, index) => {
                                             return (
-                                                <tr key={elem + index}> 
+                                                <tr key={elem + index}>
                                                     <td>{counter++}</td>
                                                     <td>{elem.studentNameAr}</td>
                                                     <td>{elem.lectureName}</td>
-                                                    <td>{elem.studentSubmission.length != 0 ? <a href={elem.studentSubmission}>{elem.fileName}</a> : '-' }</td>
-                                                    <td>10 / {elem.grade}</td> 
+                                                    <td>{elem.studentSubmission.length != 0 ? <a href={elem.studentSubmission}>{elem.fileName}</a> : '-'}</td>
+                                                    <td>{elem.grade === '' ? "-" : '10 / ' + elem.grade}</td>
                                                 </tr>
                                             );
                                         })}
-                                       
                                     </tbody>
                                 </table>
+                                <div style={{ display: list2.length == 0 ? null : "none", textAlign: 'center'}} className="container">
+                                            <section className="cards">
+                                                <article className="no-card">
+                                                    <div className="row">
+                                                        <div className="col-6 col-lg-12">
+                                                            <img src="/images/box.png" width={200} height={200} />
+                                                        </div>
+                                                        <div className="col-6 col-lg-12 emp-header">
+                                                            <h2>لا يوجد واجبات جديدة</h2>
+                                                        </div>
+                                                    </div>
+                                                </article>
+                                            </section>
+                                        </div>
                             </div>
                         </div>
                     </main>
@@ -104,7 +117,9 @@ function ListOfStudentGrades() {
 
 
                 </div>
+                
             </div>
+            
         </div>
     )
 }

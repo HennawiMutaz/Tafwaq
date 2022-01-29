@@ -225,15 +225,6 @@ function AddClassroom() {
             classroomID: "",
             nameAr: "اللغة العربية",
         }
-        ,{
-            name: "religion",
-            level: level.current.value,
-            className: `${levelMap[level?.current?.value]}  (${sectionNumberMap[sectionNumber?.current?.value]})`,
-            createdAt: serverTimestamp(),
-            id: "",
-            classroomID: "",
-            nameAr: "علوم إسلامية" ,
-        }
       ]
 
  
@@ -278,6 +269,24 @@ function AddClassroom() {
 
     }
 
+    async function checkSections() {
+       
+        document.getElementById('sectionDropdown').selectedIndex = -1;
+        const options = document.getElementsByTagName("option");
+        for (let i = 0; i < options.length; i++) {
+            const element = options[i];
+            element.style.display = "block";
+            
+        }
+
+        const q = query(collection(db, "classrooms"), where("level", "==", level.current.value));
+        const querySnapshot = await getDocs(q);
+        querySnapshot.forEach((doc) => {            
+            const d = document.querySelector(`[check="${doc.data().sectionNumber}"]`)
+            d.style.display = "none";
+        });
+    }
+
 
     return (
         <div>
@@ -311,7 +320,7 @@ function AddClassroom() {
 
                                     <div className=" col-lg-12 mb-4">
                                         <label className="label">المستوى الدراسي</label>
-                                        <select ref={level} dir="rtl" className="form-control form-select" required>
+                                        <select ref={level} dir="rtl" className="form-control form-select" required onChange={() => checkSections()}>
                                             <option value selected> </option>
                                             <option value="1">الأول</option>
                                             <option value="2">الثاني</option>
@@ -330,13 +339,13 @@ function AddClassroom() {
 
                                     <div className=" col-lg-12">
                                         <label className="label">الشعبة</label>
-                                        <select ref={sectionNumber} dir="rtl" className="form-control form-select" required>
-                                            <option value selected> </option>
-                                            <option value="1">أ</option>
-                                            <option value="2">ب</option>
-                                            <option value="3">ج</option>
-                                            <option value="4">د</option>
-                                            <option value="5">هـ</option>
+                                        <select id='sectionDropdown' ref={sectionNumber} dir="rtl" className="form-control form-select" required>
+                                            <option disabled value selected> </option>
+                                            <option check="1" value="1">أ</option>
+                                            <option check="2" value="2">ب</option>
+                                            <option check="3" value="3">ج</option>
+                                            <option check="4" value="4">د</option>
+                                            <option check="5" value="5">هـ</option>
                                         </select>
                                     </div>
 
